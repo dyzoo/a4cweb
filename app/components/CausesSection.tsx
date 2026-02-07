@@ -88,50 +88,55 @@ export default function CausesSection() {
                       {/* Glowing background effect for the button */}
                       <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-lg blur opacity-60 animate-[pulse_2s_ease-in-out_infinite] group-hover:opacity-80 transition-opacity duration-300"></div>
                       
-                      <Button asChild variant="default" 
-                        className="relative w-full  
-                          bg-gradient-to-r from-purple-600 to-pink-600
-                          border-2 border-transparent
-                          hover:from-purple-700 hover:to-pink-700
-                          transition-all
-                          duration-300
-                          hover:scale-[1.02]
-                          cursor-pointer
-                          text-white
-                          font-bold
-                          animate-[gentlePulse_2.5s_ease-in-out_infinite]
-                          shadow-lg hover:shadow-xl"
-                      >
-                        <Link href={cause.storyPath || "/stories"}>
-                          <span className="flex items-center justify-center gap-2">
-                            Read Story
-                            <svg 
-                              className="w-4 h-4 animate-[bounce_1.5s_ease-in-out_infinite]" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24" 
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
-                          </span>
-                        </Link>
-                      </Button>
+                     <Link href={cause.storyPath || "/stories"}>
+  <Button
+    variant="default"
+    className="relative w-full  
+      bg-gradient-to-r from-purple-600 to-pink-600
+      border-2 border-transparent
+      hover:from-purple-700 hover:to-pink-700
+      transition-all
+      duration-300
+      hover:scale-[1.02]
+      cursor-pointer
+      text-white
+      font-bold
+      animate-[gentlePulse_2.5s_ease-in-out_infinite]
+      shadow-lg hover:shadow-xl"
+  >
+    <span className="flex items-center justify-center gap-2">
+      Read Story
+      <svg 
+        className="w-4 h-4 animate-[bounce_1.5s_ease-in-out_infinite]" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </span>
+  </Button>
+</Link>
+
                     </div>
                   ) : (
-                    <Button asChild variant="default" 
-                      className="w-full  
-                        border-white
-                        hover:text-white
-                        transition-all
-                        duration-300
-                        hover:bg-orange-600 
-                        hover:border-orange-600
-                        hover:scale-105
-                        cursor-pointer"
-                    >
-                      <Link href={`/causes/${cause.id}`}>View Project</Link>
-                    </Button>
+                   <Link href={`/causes/${cause.id}`}>
+  <Button
+    variant="default"
+    className="w-full  
+      border-white
+      hover:text-white
+      transition-all
+      duration-300
+      hover:bg-orange-600 
+      hover:border-orange-600
+      hover:scale-105
+      cursor-pointer"
+  >
+    View Project
+  </Button>
+</Link>
+
                   )}
                 </div>
               </div>
@@ -140,9 +145,15 @@ export default function CausesSection() {
         </div>
 
         <div className="text-center">
-          <Button asChild variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
-            <Link href="/projects">View All Projects</Link>
-          </Button>
+         <Link href="/projects">
+  <Button
+    variant="outline"
+    className="border-white text-white hover:bg-white hover:text-blue-600"
+  >
+    View All Projects
+  </Button>
+</Link>
+
         </div>
       </div>
     </section>

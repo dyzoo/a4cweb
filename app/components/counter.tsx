@@ -1,28 +1,32 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export function Counter({ from = 0, to, duration = 2000 }) {
+type CounterProps = {
+  from?: number;
+  to: number;
+  duration?: number;
+};
+
+export function Counter({ from = 0, to, duration = 2000 }: CounterProps) {
   const [count, setCount] = useState(from);
 
   useEffect(() => {
-    let start = 0;
-    const end = parseInt(to);
-    if (start === end) return;
+    let start = from;
+    const increment = (to - from) / (duration / 16);
 
-    let totalMilSecDur = duration;
-    let incrementTime = 20; // 0.02 seconds
+    const timer = setInterval(() => {
+      start += increment;
 
-    let timer = setInterval(() => {
-      start += Math.ceil(end / (totalMilSecDur / incrementTime));
-      if (start >= end) {
-        start = end;
+      if (start >= to) {
+        setCount(to);
         clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
       }
-      setCount(start);
-    }, incrementTime);
+    }, 16);
 
     return () => clearInterval(timer);
-  }, [to, duration]);
+  }, [from, to, duration]);
 
-  return <span>{count.toLocaleString()}</span>;
+  return <span>{count}</span>;
 }
