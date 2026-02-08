@@ -40,7 +40,7 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/" className={`px-3 py-2 text-sm font-medium transition ${isActive("/")}`}>
+            <Link href="/home" className={`px-3 py-2 text-sm font-medium transition ${isActive("/")}`}>
               Home
             </Link>
 
