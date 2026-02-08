@@ -13,9 +13,16 @@ export default function VolunteerSection() {
             <p className="text-lg mb-6">
               Your time and skills can change lives. Join our team of dedicated volunteers making a difference in communities around the world.
             </p>
-            <Button asChild variant="secondary" size="lg" className="bg-gradient-to-r from-orange-600 to-orange-800 text-white font-bold hover:from-orange-700 hover:to-orange-900 transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border-0 cursor-pointer">
-              <Link href="/BecomeVolunteer">Join Our Team</Link>
-            </Button>
+           <Link href="/BecomeVolunteer">
+  <Button 
+    variant="secondary" 
+    size="lg"
+    className="bg-gradient-to-r from-orange-600 to-orange-800 text-white font-bold hover:from-orange-700 hover:to-orange-900 transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border-0 cursor-pointer"
+  >
+    Join Our Team
+  </Button>
+</Link>
+
           </div>
 
           {/* Right: Info Cards */}
