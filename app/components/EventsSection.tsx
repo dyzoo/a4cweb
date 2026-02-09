@@ -34,7 +34,7 @@ export default function EventsSection() {
     },
     {
       id: 2,
-      title: "Community Food Drive",
+      title: "Nane Nane 2025",
       date: "5 November 2023",
       time: "9:00 AM - 3:00 PM",
       location: "Various Locations",
