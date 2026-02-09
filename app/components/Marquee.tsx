@@ -11,7 +11,7 @@ export default function StickyMarquee() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full z-[9999] bg-gradient-to-r from-orange-700 to-orange-600 shadow-md">
+    <div className="fixed top-16 left-0 w-full z-40 bg-gradient-to-r from-orange-700 to-orange-600">
 
       {/* Progress bar */}
       <div className="h-1 w-full bg-gray-200">
