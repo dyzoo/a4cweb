@@ -63,7 +63,7 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <Link href="/become-volunteer">
+            <Link href="/BecomeVolunteer">
               <Button variant="outline" size="sm">
                 Become a Volunteer
               </Button>
