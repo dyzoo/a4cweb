@@ -1,38 +1,37 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-import { useState } from "react";
 import { Button } from "./ui/button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname() ?? "";
+  const pathname = usePathname() || "";
 
   const isActive = (path: string) =>
     pathname === path
       ? "text-primary font-semibold border-b-2 border-primary"
-      : "text-gray-700 hover:text-primary";
+      : "text-gray-700 dark:text-gray-300 hover:text-primary";
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 bg-white dark:bg-neutral-900 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex h-16 items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center gap-3">
             <Image
               src="/A4C_Logo.svg"
               alt="Aid 4 Children Tanzania Logo"
               width={48}
               height={48}
               priority
-              className="mr-3"
             />
             <span className="text-xl font-bold text-primary">
               Aid 4 Children Tanzania
@@ -41,19 +40,19 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/" className={`px-3 py-2 text-sm font-medium transition ${isActive("/")}`}>
+            <Link href="/" className={`px-3 py-2 text-sm transition ${isActive("/")}`}>
               Home
             </Link>
 
-            <Link href="/projects" className={`px-3 py-2 text-sm font-medium transition ${isActive("/projects")}`}>
+            <Link href="/projects" className={`px-3 py-2 text-sm transition ${isActive("/projects")}`}>
               Projects
             </Link>
 
-            <Link href="/about" className={`px-3 py-2 text-sm font-medium transition ${isActive("/about")}`}>
+            <Link href="/about" className={`px-3 py-2 text-sm transition ${isActive("/about")}`}>
               About Us
             </Link>
 
-            <Link href="/contact" className={`px-3 py-2 text-sm font-medium transition ${isActive("/contact")}`}>
+            <Link href="/contact" className={`px-3 py-2 text-sm transition ${isActive("/contact")}`}>
               Contact Us
             </Link>
 
@@ -63,7 +62,8 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <Link href="/BecomeVolunteer">
+            {/* ✅ lowercase route */}
+            <Link href="/become-volunteer">
               <Button variant="outline" size="sm">
                 Become a Volunteer
               </Button>
@@ -76,7 +76,7 @@ export default function Navbar() {
               type="button"
               aria-label="Toggle menu"
               onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none"
+              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary focus:outline-none"
             >
               {!isOpen ? (
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,21 +94,21 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`md:hidden ${isOpen ? "block" : "hidden"}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-50">
+        <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-50 dark:bg-neutral-800">
 
-          <Link href="/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">
+          <Link href="/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base hover:bg-gray-100 dark:hover:bg-neutral-700">
             Home
           </Link>
 
-          <Link href="/projects" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">
+          <Link href="/projects" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base hover:bg-gray-100 dark:hover:bg-neutral-700">
             Projects
           </Link>
 
-          <Link href="/about" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">
+          <Link href="/about" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base hover:bg-gray-100 dark:hover:bg-neutral-700">
             About Us
           </Link>
 
-          <Link href="/contact" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">
+          <Link href="/contact" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base hover:bg-gray-100 dark:hover:bg-neutral-700">
             Contact Us
           </Link>
 
@@ -117,6 +117,7 @@ export default function Navbar() {
               <Button className="w-full">Donate</Button>
             </Link>
 
+            {/* ✅ lowercase route */}
             <Link href="/become-volunteer" onClick={closeMenu}>
               <Button variant="outline" className="w-full">
                 Become a Volunteer
