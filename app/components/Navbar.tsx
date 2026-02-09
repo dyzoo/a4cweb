@@ -117,7 +117,7 @@ export default function Navbar() {
               <Button className="w-full">Donate</Button>
             </Link>
 
-            <Link href="/become-volunteer" onClick={closeMenu}>
+            <Link href="/BecomeVolunteer" onClick={closeMenu}>
               <Button variant="outline" className="w-full">
                 Become a Volunteer
               </Button>
