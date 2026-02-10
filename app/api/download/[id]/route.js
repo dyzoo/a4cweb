@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 
-export async function GET(request, { params }) {
-  const fileId = params.id;
+export async function GET(req, { params }) {
+  // ✅ MUST await params in Next.js 15+
+  const resolvedParams = await params;
+  const fileId = resolvedParams.id;
 
   try {
     const filePath = path.join(
@@ -27,10 +29,7 @@ export async function GET(request, { params }) {
         "Content-Disposition": `attachment; filename="${fileId}.pdf"`,
       },
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Server error" },
-      { status: 500 }
-    );
+  } catch (err) {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

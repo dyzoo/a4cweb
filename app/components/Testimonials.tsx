@@ -4,7 +4,7 @@ export default function Testimonials() {
   const testimonials = [
     {
       id: 1,
-      name: "Mr. Kees Cuperus",
+      name: "Georville Marcus",
       role: "Donor since 2024",
       content: "Seeing the impact of my donations through regular updates keeps me motivated to give more. This charity truly makes every dollar count.",
       avatar: "/Smiley.jpg"
@@ -29,8 +29,8 @@ export default function Testimonials() {
     <section className="py-20 bg-gray-50 mx-auto px-4 w-full">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Stories of Impact</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-gray-900">Stories of Impact</h2>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto dark:text-gray-900">
             Hear from those who have been touched by our work.
           </p>
         </div>
@@ -45,11 +45,11 @@ export default function Testimonials() {
                     <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="ml-4">
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <h4 className="font-semibold dark:text-gray-900">{testimonial.name}</h4>
+                    <p className="text-sm text-muted-foreground dark:text-gray-900">{testimonial.role}</p>
                   </div>
                 </div>
-                <p className="text-muted-foreground">"{testimonial.content}"</p>
+                <p className="text-muted-foreground dark:text-gray-900">"{testimonial.content}"</p>
               </div>
             ))}
           </div>

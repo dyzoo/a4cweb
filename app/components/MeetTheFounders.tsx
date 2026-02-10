@@ -10,15 +10,15 @@ const MeetTheFounders = () => {
       designation: 'Founder & Director',
       image: '/IDDY_SAMPLE.jpg',
       alt: 'Idrissa Abdallah',
-      email: 'idrissa@example.com',
+      email: 'director@aid4children.org',
     },
     {
       id: 2,
       name: 'Gideon Felix',
-      designation: 'Founder & Assistant Director',
+      designation: 'Founder & Associate Director',
       image: '/GIDDYA4C.jpg',
       alt: 'Gideon Felix',
-      email: 'gideonfelixy@gmail.com',
+      email: 'gideonfelixy@aid4children.org',
     },
   ];
 

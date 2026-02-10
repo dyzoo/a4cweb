@@ -148,7 +148,7 @@ export default function CausesSection() {
          <Link href="/projects">
   <Button
     variant="outline"
-    className="border-white text-white hover:bg-white hover:text-blue-600"
+    className="border-white text-white hover:bg-white hover:text-blue-600 cursor-pointer"
   >
     View All Projects
   </Button>

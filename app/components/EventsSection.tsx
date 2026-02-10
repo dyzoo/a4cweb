@@ -22,10 +22,10 @@ export default function EventsSection() {
   const events: EventType[] = [
     {
       id: 1,
-      title: "Annual Charity Gala",
-      date: "15 October 2023",
-      time: "6:00 PM",
-      location: "Grand Ballroom, City Center",
+      title: "A4C EDUMISHA",
+      date: "15 October 2025",
+      time: "12:00 PM",
+      location: "Maji Matitu Primary School",
       description:
         "Join us for an evening of inspiration and giving at our signature fundraising event.",
       image: "/event11.jpeg",
@@ -156,8 +156,8 @@ export default function EventsSection() {
                     />
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">
+                  <div className="p-6 dark:bg-white">
+                    <h3 className="text-xl font-semibold mb-2 dark:text-gray-900">
                       {event.title}
                     </h3>
                     <p className="text-sm text-gray-500 mb-2">
@@ -176,7 +176,8 @@ export default function EventsSection() {
 
                     <Button
                       variant="outline"
-                      className="w-full"
+                      className="w-full cursor-pointer hover:bg-orange-600 hover:text-white dark:border-gray-900 dark:text-gray-900"
+                      
                       onClick={() =>
                         setExpandedId(isExpanded ? null : event.id)
                       }
