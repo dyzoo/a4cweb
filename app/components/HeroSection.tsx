@@ -50,7 +50,7 @@ export default function HeroSection() {
   }, [currentText, isDeleting, currentWordIndex]);
 
   const handleDownload = () => {
-    toast.success(" Download is starting...");
+    toast.success(" Download has started...");
     window.location.href = "/api/download/brochure";
   };
 
