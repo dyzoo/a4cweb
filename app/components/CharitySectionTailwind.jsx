@@ -155,11 +155,7 @@ const ChildStorySection = () => {
               </div>
               
               {/* Floating Impact Badge */}
-              <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-                <div className="flex items-center gap-3">
-                  
-                </div>
-              </div>
+              
             </div>
             
             {/* Decorative Elements */}
