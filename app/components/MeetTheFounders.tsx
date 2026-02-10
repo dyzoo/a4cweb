@@ -15,7 +15,7 @@ const MeetTheFounders = () => {
     {
       id: 2,
       name: 'Gideon Felix',
-      designation: 'Founder & Assistant Director',
+      designation: 'Founder & Associate Director',
       image: '/GIDDYA4C.jpg',
       alt: 'Gideon Felix',
       email: 'gideonfelixy@gmail.com',
