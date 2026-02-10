@@ -64,7 +64,7 @@ export default function Navbar() {
 
             {/* ✅ lowercase route */}
             <Link href="/become-volunteer">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="cursor-pointer">
                 Become a Volunteer
               </Button>
             </Link>
@@ -118,7 +118,7 @@ export default function Navbar() {
             </Link>
 
             <Link href="/become-volunteer" onClick={closeMenu}>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full cursor-pointer">
                 Become a Volunteer
               </Button>
             </Link>
