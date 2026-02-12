@@ -4,18 +4,34 @@ import { MongoClient, ObjectId } from 'mongodb';
 const MONGODB_URI = process.env.MONGODB_URI!;
 const DATABASE_NAME = process.env.DATABASE_NAME!;
 
+
+console.log("Mongo URI:", MONGODB_URI);
+
 async function getProject(id: string) {
   const client = new MongoClient(MONGODB_URI);
   await client.connect();
 
   const db = client.db(DATABASE_NAME);
-  const project = await db.collection('projects').findOne({ _id: new ObjectId(id) });
+
+  // ✅ Prevent crash if invalid id
+  if (!ObjectId.isValid(id)) {
+    console.log("Invalid project id:", id);
+    return null;
+  }
+
+  const project = await db
+    .collection('projects')
+    .findOne({ _id: new ObjectId(id) });
 
   return project;
 }
 
-export default async function ProjectDetails({ params }: any) {
-  const project = await getProject(params.id);
+
+
+export default async function ProjectDetails({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const project = await getProject(id);
+
 
   if (!project) return notFound();
 
@@ -34,4 +50,5 @@ export default async function ProjectDetails({ params }: any) {
       </div>
     </div>
   );
+  
 }

@@ -6,6 +6,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { HeartIcon, EyeIcon, ArrowRightIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
+
+
+
 export default function ProjectsPage() {
   const projects = [
     {
@@ -14,7 +17,7 @@ export default function ProjectsPage() {
       description: 'Providing quality education to underprivileged children...',
       images: ['/Child_1.jpg', '/Child_2.jpg'],
       location: 'Dar es Salaam',
-      impact: '250+ children educated',
+      impact: 'Reaching 500+ children yearly',
     },
     {
       id: "2",
@@ -33,6 +36,8 @@ export default function ProjectsPage() {
       impact: '3 wells built, 1000+ people served',
     },
   ];
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
@@ -126,13 +131,13 @@ function ProjectCard({ project }: { project: any }) {
         <div className="bg-blue-100 rounded-lg p-3 mb-4">
           <div className="text-sm font-semibold text-blue-800 flex items-center">
             <HeartIcon className="h-4 w-4 mr-2" />
-            Impact: {project.impact}
+            Target: {project.impact}
           </div>
         </div>
 
         {/* View Button (Dynamic Route) */}
         <Link
-          href={`/projects/${project.id}`}
+          href={`/projects/${project.id.toString()}`}
           className="w-full block text-center bg-blue-900 text-white py-2 rounded-lg font-semibold hover:bg-blue-800 transition"
         >
           <EyeIcon className="h-4 w-4 inline-block mr-2" />
