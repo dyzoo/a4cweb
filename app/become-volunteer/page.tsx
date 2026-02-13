@@ -75,63 +75,51 @@ export default function VolunteerPage() {
     }
   };
 
-// Replace the current handleSubmit function in your volunteer page
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (userCaptcha !== captchaText) {
-    alert('CAPTCHA verification failed.');
-    generateCaptcha();
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    const data = new FormData();
-
-    data.append('firstName', formData.firstName);
-    data.append('lastName', formData.lastName);
-    data.append('phone', formData.phone);
-    data.append('countryCode', formData.countryCode);
-    data.append('email', formData.email);
-    data.append('birthYear', formData.birthYear);
-    data.append('birthMonth', formData.birthMonth);
-    data.append('birthDate', formData.birthDate);
-    data.append('location', formData.location);
-
-    if (formData.cv) {
-      data.append('cv', formData.cv);
+    if (userCaptcha !== captchaText) {
+      alert('CAPTCHA verification failed.');
+      generateCaptcha();
+      return;
     }
 
-    const res = await fetch('/api/volunteer', {
-      method: 'POST',
-      body: data, // ✅ browser now sets multipart/form-data automatically
-    });
+    setIsSubmitting(true);
 
-    const result = await res.json();
+    try {
+      const data = new FormData();
 
-    if (!res.ok) throw new Error(result.error || 'Submission failed');
+      data.append('firstName', formData.firstName);
+      data.append('lastName', formData.lastName);
+      data.append('phone', formData.phone);
+      data.append('countryCode', formData.countryCode);
+      data.append('email', formData.email);
+      data.append('birthYear', formData.birthYear);
+      data.append('birthMonth', formData.birthMonth);
+      data.append('birthDate', formData.birthDate);
+      data.append('location', formData.location);
 
-    setIsSubmitted(true);
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message || 'Submission failed. Try again.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      if (formData.cv) {
+        data.append('cv', formData.cv);
+      }
 
+      const res = await fetch('/api/volunteer', {
+        method: 'POST',
+        body: data,
+      });
 
-// Optional: Helper function to convert file to base64
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-  });
-};
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.error || 'Submission failed');
+
+      setIsSubmitted(true);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Submission failed. Try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const countryCodes = [
     { code: '+255', country: 'Tanzania' },
@@ -165,56 +153,56 @@ const fileToBase64 = (file: File): Promise<string> => {
   const years = Array.from({ length: 80 }, (_, i) => currentYear - 18 - i);
   const dates = Array.from({ length: 31 }, (_, i) => i + 1);
 
-if (isSubmitted) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-          <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-6" />
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Hi {formData.firstName},
-          </h1>
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
+            <CheckCircleIcon className="h-16 w-16 text-green-500 dark:text-green-400 mx-auto mb-6" />
+            
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Hi {formData.firstName},
+            </h1>
 
-          <p className="text-lg text-gray-600 mb-6">
-            Thank you for your interest in volunteering with us. 
-            We have successfully received your application and our team will contact you within 3–5 business days.
-          </p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+              Thank you for your interest in volunteering with us. 
+              We have successfully received your application and our team will contact you within 3–5 business days.
+            </p>
 
-          <button
-            onClick={() => window.location.href = '/'}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Return to Home
-          </button>
+            <button
+              onClick={() => window.location.href = '/'}
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            >
+              Return to Home
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Become a Volunteer</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Become a Volunteer</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Join our mission to create lasting change. Your time and skills can make a difference in children's lives across Tanzania.
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   First Name *
                 </label>
                 <div className="relative">
-                  <UserIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <UserIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="text"
                     id="firstName"
@@ -222,18 +210,18 @@ if (isSubmitted) {
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="Enter your first name"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   Last Name *
                 </label>
                 <div className="relative">
-                  <UserIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <UserIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="text"
                     id="lastName"
@@ -241,7 +229,7 @@ if (isSubmitted) {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -250,17 +238,17 @@ if (isSubmitted) {
 
             {/* Phone Number */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Phone Number *
               </label>
               <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <PhoneIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <PhoneIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none"
+                    className="w-full pl-10 pr-8 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none"
                   >
                     {countryCodes.map(({ code, country }) => (
                       <option key={code} value={code}>
@@ -268,7 +256,7 @@ if (isSubmitted) {
                       </option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -281,7 +269,7 @@ if (isSubmitted) {
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="flex-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="flex-2 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Phone number"
                 />
               </div>
@@ -289,11 +277,11 @@ if (isSubmitted) {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Email Address *
               </label>
               <div className="relative">
-                <EnvelopeIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <EnvelopeIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="email"
                   id="email"
@@ -301,7 +289,7 @@ if (isSubmitted) {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -309,18 +297,18 @@ if (isSubmitted) {
 
             {/* Date of Birth */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Date of Birth *
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative">
-                  <CalendarIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 z-10" />
+                  <CalendarIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2 z-10" />
                   <select
                     name="birthYear"
                     required
                     value={formData.birthYear}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white relative z-0"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white relative z-0"
                   >
                     <option value="">Year</option>
                     {years.map(year => (
@@ -334,7 +322,7 @@ if (isSubmitted) {
                   required
                   value={formData.birthMonth}
                   onChange={handleInputChange}
-                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white"
+                  className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Month</option>
                   {months.map(month => (
@@ -347,7 +335,7 @@ if (isSubmitted) {
                   required
                   value={formData.birthDate}
                   onChange={handleInputChange}
-                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white"
+                  className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Date</option>
                   {dates.map(date => (
@@ -359,11 +347,11 @@ if (isSubmitted) {
 
             {/* Location */}
             <div>
-              <label htmlFor="location" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Current Location *
               </label>
               <div className="relative">
-                <MapPinIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <MapPinIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
                   id="location"
@@ -371,7 +359,7 @@ if (isSubmitted) {
                   required
                   value={formData.location}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="City, Country"
                 />
               </div>
@@ -379,18 +367,18 @@ if (isSubmitted) {
 
             {/* CV Upload */}
             <div>
-              <label htmlFor="cv" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="cv" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Upload CV (PDF, max 5MB) *
               </label>
               <div 
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
+                className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors bg-white dark:bg-gray-700"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600 mb-2">
+                <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                <p className="text-gray-600 dark:text-gray-300 mb-2">
                   {formData.cv ? formData.cv.name : 'Click to upload your CV'}
                 </p>
-                <p className="text-sm text-gray-500">PDF, DOC, DOCX (Max 5MB)</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">PDF, DOC, DOCX (Max 5MB)</p>
                 <input
                   type="file"
                   id="cv"
@@ -402,7 +390,7 @@ if (isSubmitted) {
                 />
               </div>
               {formData.cv && (
-                <p className="text-sm text-green-600 mt-2 flex items-center">
+                <p className="text-sm text-green-600 dark:text-green-400 mt-2 flex items-center">
                   <CheckCircleIcon className="h-4 w-4 mr-1" />
                   File selected: {formData.cv.name} ({(formData.cv.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
@@ -410,18 +398,18 @@ if (isSubmitted) {
             </div>
 
             {/* CAPTCHA */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <label htmlFor="captcha" className="block text-sm font-semibold text-gray-700 mb-4">
+            <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg">
+              <label htmlFor="captcha" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
                 Security Verification *
               </label>
               <div className="flex items-center gap-4">
-                <div className="flex-1 bg-white p-4 rounded border-2 border-gray-300 font-mono text-2xl text-center tracking-widest select-none">
+                <div className="flex-1 bg-white dark:bg-gray-800 p-4 rounded border-2 border-gray-300 dark:border-gray-600 font-mono text-2xl text-center tracking-widest select-none text-gray-900 dark:text-white">
                   {captchaText}
                 </div>
                 <button
                   type="button"
                   onClick={generateCaptcha}
-                  className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800 font-semibold cursor-pointer"
+                  className="px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold cursor-pointer"
                 >
                   Refresh
                 </button>
@@ -431,7 +419,7 @@ if (isSubmitted) {
                 id="captcha"
                 value={userCaptcha}
                 onChange={(e) => setUserCaptcha(e.target.value)}
-                className="w-full mt-4 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 "
+                className="w-full mt-4 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 placeholder="Enter the code above"
                 required
               />
@@ -441,11 +429,7 @@ if (isSubmitted) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-800 to-orange-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-0range-600 hover:to-blue-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition
-  duration-300
-  transform
-  hover:-translate-y-1
-  hover:scale-105 cursor-pointer"
+              className="w-full bg-gradient-to-r from-blue-800 to-orange-600 dark:from-blue-600 dark:to-orange-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-900 hover:to-orange-700 dark:hover:from-blue-700 dark:hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transform hover:-translate-y-1 hover:scale-105 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
@@ -457,7 +441,7 @@ if (isSubmitted) {
               )}
             </button>
 
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
               By submitting this form, you agree to our privacy policy and terms of service.
             </p>
           </form>
