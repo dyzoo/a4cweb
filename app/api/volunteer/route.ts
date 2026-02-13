@@ -3,8 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient, GridFSBucket } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-//const DATABASE_NAME = process.env.DATABASE_NAME!;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("MONGODB_URI is not defined in environment variables");
+}
+
+const DATABASE_NAME = process.env.DATABASE_NAME!;
 const COLLECTION_NAME = 'volunteer_applications';
 
 let cachedClient: MongoClient | null = null;
