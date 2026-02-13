@@ -165,27 +165,33 @@ const fileToBase64 = (file: File): Promise<string> => {
   const years = Array.from({ length: 80 }, (_, i) => currentYear - 18 - i);
   const dates = Array.from({ length: 31 }, (_, i) => i + 1);
 
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-6" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Application Submitted!</h1>
-            <p className="text-lg text-gray-600 mb-6">
-              Thank you for your interest in volunteering with us. We've received your application and will contact you within 3-5 business days.
-            </p>
-            <button
-              onClick={() => window.location.href = '/'}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Return to Home
-            </button>
-          </div>
+if (isSubmitted) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+          <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-6" />
+          
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Hi {formData.firstName},
+          </h1>
+
+          <p className="text-lg text-gray-600 mb-6">
+            Thank you for your interest in volunteering with us. 
+            We have successfully received your application and our team will contact you within 3–5 business days.
+          </p>
+
+          <button
+            onClick={() => window.location.href = '/'}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          >
+            Return to Home
+          </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
