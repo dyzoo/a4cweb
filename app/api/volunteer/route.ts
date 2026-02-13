@@ -4,21 +4,21 @@ import { MongoClient, GridFSBucket } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 
 const MONGODB_URI = process.env.MONGODB_URI!;
-const DATABASE_NAME = process.env.DATABASE_NAME!;
+//const DATABASE_NAME = process.env.DATABASE_NAME!;
 const COLLECTION_NAME = 'volunteer_applications';
 
 let cachedClient: MongoClient | null = null;
 
 async function connectToDatabase() {
-  if (cachedClient) return cachedClient.db(DATABASE_NAME);
+  if (cachedClient) return cachedClient.db(); // no argument
 
-  const client = new MongoClient(MONGODB_URI);
+  const client = new MongoClient(process.env.MONGODB_URI!);
   await client.connect();
   cachedClient = client;
 
-  console.log('✅ MongoDB connected successfully');
-  return client.db(DATABASE_NAME);
+  return client.db(); // no DATABASE_NAME
 }
+
 
 export async function POST(request: NextRequest) {
   try {
