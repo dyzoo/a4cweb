@@ -3,6 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient, GridFSBucket } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 
+
+// Add at the top of your /api/volunteer/route.ts
+console.log('=== DEBUG ENV VARIABLES ===');
+console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+console.log('MONGODB_URI length:', process.env.MONGODB_URI?.length);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('VERCEL_ENV:', process.env.VERCEL_ENV);
+console.log('===========================');
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
