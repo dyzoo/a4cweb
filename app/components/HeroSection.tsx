@@ -49,10 +49,29 @@ export default function HeroSection() {
     return () => clearTimeout(timeout);
   }, [currentText, isDeleting, currentWordIndex]);
 
-  const handleDownload = () => {
-    toast.success(" Download has started");
-    window.location.href = "/api/download/brochure";
-  };
+  const handleDownload = async () => {
+  try {
+    const res = await fetch("/api/download/brochure.pdf");
+    if (!res.ok) {
+      toast.error("File not found!");
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "brochure.pdf"; // downloaded filename
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast.success("Download has started!");
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to download file");
+  }
+};
+
 
   return (
     <>

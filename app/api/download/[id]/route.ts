@@ -1,52 +1,56 @@
-import { NextRequest } from "next/server";
-import { MongoClient, GridFSBucket, ObjectId } from "mongodb";
-
-const MONGODB_URI = process.env.MONGODB_URI!;
-const DATABASE_NAME = process.env.DATABASE_NAME!;
-
-let cachedClient: MongoClient | null = null;
-
-async function connect() {
-  if (cachedClient) return cachedClient;
-
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  cachedClient = client;
-
-  return client;
-}
+import { NextRequest, NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
+import { connectGridFS } from "@/lib/gridfs";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // ✅ Next.js 15 requires Promise
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const resolvedParams = await params;
-    const fileId = resolvedParams.id;
+  const resolvedParams = await params;
+  let idOrFilename = resolvedParams.id;
 
-    if (!ObjectId.isValid(fileId)) {
-      return new Response("Invalid file ID", { status: 400 });
+  try {
+    const bucket = await connectGridFS();
+
+    let downloadStream;
+    let actualFileName: string;
+
+    if (ObjectId.isValid(idOrFilename)) {
+      const files = await bucket.find({ _id: new ObjectId(idOrFilename) }).toArray();
+      if (!files || files.length === 0) return new NextResponse("File not found", { status: 404 });
+      actualFileName = files[0].filename;
+      downloadStream = bucket.openDownloadStream(new ObjectId(idOrFilename));
+    } else {
+      // Add .pdf if not included (optional)
+      if (!idOrFilename.includes(".")) idOrFilename += ".pdf";
+
+      const files = await bucket
+        .find({ filename: { $regex: `^${idOrFilename}$`, $options: "i" } })
+        .toArray();
+
+      if (!files || files.length === 0) return new NextResponse("File not found", { status: 404 });
+      actualFileName = files[0].filename;
+      downloadStream = bucket.openDownloadStreamByName(actualFileName);
     }
 
-    const client = await connect();
-    const db = client.db(DATABASE_NAME);
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
 
-    const bucket = new GridFSBucket(db, {
-      bucketName: "cvUploads",
+    downloadStream.on("data", (chunk: Buffer) => writer.write(chunk));
+    downloadStream.on("error", (err: Error) => {
+      console.error("Download error:", err);
+      writer.close();
     });
+    downloadStream.on("end", () => writer.close());
 
-    const downloadStream = bucket.openDownloadStream(
-      new ObjectId(fileId)
-    );
-
-    return new Response(downloadStream as any, {
+    return new NextResponse(readable, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="cv.pdf"`,
+        "Content-Disposition": `attachment; filename="${actualFileName}"`,
       },
     });
   } catch (error) {
     console.error("CV download error:", error);
-    return new Response("File not found", { status: 404 });
+    return new NextResponse("File not found", { status: 404 });
   }
 }

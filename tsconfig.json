@@ -22,10 +22,9 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -35,7 +34,7 @@
     ".next/types/**/*.ts",
     "lib/mongodb.js",
     ".next/dev/types/**/*.ts"
-  ],
+, "models/project.js", "listGridFSFiles.js"  ],
   "exclude": [
     "node_modules"
   ]
