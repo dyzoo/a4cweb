@@ -1,4 +1,5 @@
 // lib/services/pesapal.ts
+
 interface PesaPalConfig {
   consumerKey: string;
   consumerSecret: string;
@@ -47,262 +48,296 @@ interface PesaPalResponse {
   orderTrackingId?: string;
   merchantReference?: string;
   error?: string;
-  details?: any;
+  details?: unknown;
 }
 
-// PesaPal API endpoints for Tanzania
 const PESAPAL_URLS = {
   sandbox: {
-    auth: 'https://cybqa.pesapal.com/pesapalv3/api/Auth/RequestToken',
+    auth:   'https://cybqa.pesapal.com/pesapalv3/api/Auth/RequestToken',
     submit: 'https://cybqa.pesapal.com/pesapalv3/api/Transactions/SubmitOrderRequest',
     status: 'https://cybqa.pesapal.com/pesapalv3/api/Transactions/GetTransactionStatus',
-    ipn: 'https://cybqa.pesapal.com/pesapalv3/api/URLSetup/RegisterIPN'
+    ipn:    'https://cybqa.pesapal.com/pesapalv3/api/URLSetup/RegisterIPN',
   },
   production: {
-    auth: 'https://pay.pesapal.com/v3/api/Auth/RequestToken',
+    auth:   'https://pay.pesapal.com/v3/api/Auth/RequestToken',
     submit: 'https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest',
     status: 'https://pay.pesapal.com/v3/api/Transactions/GetTransactionStatus',
-    ipn: 'https://pay.pesapal.com/v3/api/URLSetup/RegisterIPN'
-  }
+    ipn:    'https://pay.pesapal.com/v3/api/URLSetup/RegisterIPN',
+  },
 };
+
+// Cache the IPN ID in memory for the lifetime of the server process.
+// This avoids re-registering on every payment request.
+let cachedIpnId: string | null = null;
 
 export class PesaPalService {
   private config: PesaPalConfig;
-  private baseUrl: string;
 
   constructor() {
+    // Validate all required env vars up front — fail loudly rather than
+    // silently using empty strings or localhost in production.
+    const consumerKey     = process.env.PESAPAL_CONSUMER_KEY;
+    const consumerSecret  = process.env.PESAPAL_CONSUMER_SECRET;
+    const baseUrl         = process.env.NEXT_PUBLIC_BASE_URL;
+    const environment     = process.env.PESAPAL_ENVIRONMENT as 'sandbox' | 'production' | undefined;
+
+    if (!consumerKey)    throw new Error('Missing env var: PESAPAL_CONSUMER_KEY');
+    if (!consumerSecret) throw new Error('Missing env var: PESAPAL_CONSUMER_SECRET');
+    if (!baseUrl)        throw new Error('Missing env var: NEXT_PUBLIC_BASE_URL');
+    if (environment && environment !== 'sandbox' && environment !== 'production') {
+      throw new Error(`Invalid PESAPAL_ENVIRONMENT value: "${environment}". Must be "sandbox" or "production".`);
+    }
+
     this.config = {
-      consumerKey: process.env.PESAPAL_CONSUMER_KEY || '',
-      consumerSecret: process.env.PESAPAL_CONSUMER_SECRET || '',
-      environment: (process.env.PESAPAL_ENVIRONMENT as 'sandbox' | 'production') || 'sandbox',
-      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/donation/callback`,
-      ipnUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/donation/ipn`
+      consumerKey,
+      consumerSecret,
+      environment: environment ?? 'sandbox',
+      callbackUrl: `${baseUrl}/api/donation/callback`,
+      ipnUrl:      `${baseUrl}/api/donation/ipn`,
     };
-    this.baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    
-    // Log config (without sensitive data)
-    console.log('PesaPal Service initialized with:', {
-      environment: this.config.environment,
-      callbackUrl: this.config.callbackUrl,
-      ipnUrl: this.config.ipnUrl,
-      hasConsumerKey: !!this.config.consumerKey,
-      hasConsumerSecret: !!this.config.consumerSecret
+
+    console.log('[PesaPal] Service initialised:', {
+      environment:    this.config.environment,
+      callbackUrl:    this.config.callbackUrl,
+      ipnUrl:         this.config.ipnUrl,
+      hasConsumerKey: true,
     });
   }
 
+  // ─── Public ────────────────────────────────────────────────────────────────
+
   async initializePayment(donationData: DonationData): Promise<PesaPalResponse> {
     try {
-      // Validate config first
-      if (!this.config.consumerKey || !this.config.consumerSecret) {
-        throw new Error('PesaPal consumer key and secret are required');
-      }
+      const token = await this.getToken();
 
-      // Get auth token
-      console.log('Getting PesaPal token...');
-      const token = await this.getPesaPalToken();
-      console.log('Token obtained successfully');
+      // Re-use cached IPN ID; register only when necessary.
+      const ipnId = await this.getOrRegisterIPN(token);
 
-      // Register IPN
-      console.log('Registering IPN...');
-      const ipnId = await this.registerIPN(token);
-      console.log('IPN registered with ID:', ipnId);
-      
-      // Prepare order data for Tanzania
       const orderData: OrderData = {
-        id: donationData.reference,
-        currency: 'TZS',
-        amount: donationData.amount,
-        description: `Donation for ${donationData.cause} - ${donationData.reference}`,
-        callback_url: this.config.callbackUrl,
+        id:              donationData.reference,
+        currency:        'TZS',
+        amount:          donationData.amount,
+        description:     `Donation – ${donationData.cause} (${donationData.reference})`,
+        callback_url:    this.config.callbackUrl,
         notification_id: ipnId,
-        branch: 'NGO Donations',
+        branch:          'NGO Donations',
         billing_address: {
-          email_address: donationData.donor?.email || 'anonymous@example.com',
-          phone_number: donationData.donor?.phone || '0712345678',
-          country_code: 'TZ',
-          first_name: donationData.donor?.firstName || 'Anonymous',
-          last_name: donationData.donor?.lastName || 'Donor',
-          line_1: 'Dar es Salaam',
-          city: 'Dar es Salaam',
-          state: 'Dar es Salaam',
-          postal_code: '00100',
-          zip_code: '00100'
-        }
+          email_address: donationData.donor?.email     ?? 'anonymous@example.com',
+          phone_number:  this.normalisePhone(donationData.donor?.phone ?? ''),
+          country_code:  'TZ',
+          first_name:    donationData.donor?.firstName ?? 'Anonymous',
+          last_name:     donationData.donor?.lastName  ?? 'Donor',
+          line_1:        'Dar es Salaam',
+          city:          'Dar es Salaam',
+          state:         'Dar es Salaam',
+          postal_code:   '00100',
+          zip_code:      '00100',
+        },
       };
 
-      console.log('Submitting order to PesaPal...');
+      console.log('[PesaPal] Submitting order:', {
+        id:              orderData.id,
+        amount:          orderData.amount,
+        currency:        orderData.currency,
+        notification_id: orderData.notification_id,
+      });
+
       const response = await this.submitOrder(token, orderData);
-      console.log('Order submission response:', response);
-      
-      // Check different possible success indicators
-      if (response.status === '200' || response.status === 200 || response.status === '1' || response.status === 1) {
+
+      // PesaPal returns status 200 (number or string) on success.
+      const statusCode = Number(response.status);
+      if (statusCode === 200) {
+        if (!response.redirect_url) {
+          throw new Error('PesaPal returned status 200 but no redirect_url');
+        }
         return {
-          success: true,
-          redirectUrl: response.redirect_url,
-          orderTrackingId: response.order_tracking_id,
-          merchantReference: response.merchant_reference
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error || response.message || 'Payment initialization failed',
-          details: response
+          success:           true,
+          redirectUrl:       response.redirect_url,
+          orderTrackingId:   response.order_tracking_id,
+          merchantReference: response.merchant_reference,
         };
       }
+
+      // Surface the actual PesaPal error message when available.
+      const errorMessage =
+        response.error?.message ??
+        response.message ??
+        `Unexpected status: ${response.status}`;
+
+      console.error('[PesaPal] Order submission failed:', response);
+      return { success: false, error: errorMessage, details: response };
+
     } catch (error) {
-      console.error('PesaPal initialization error:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        details: error
-      };
-    }
-  }
-
- private async getPesaPalToken(): Promise<string> {
-  const url = PESAPAL_URLS[this.config.environment].auth;
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      consumer_key: this.config.consumerKey,
-      consumer_secret: this.config.consumerSecret
-    })
-  });
-
-  const data = await response.json();
-
-  if (data.token) {
-    return data.token;
-  }
-
-  throw new Error(JSON.stringify(data));
-}
-
-  private async registerIPN(token: string): Promise<string> {
-    try {
-      const url = PESAPAL_URLS[this.config.environment].ipn;
-      
-      console.log('Registering IPN at:', url);
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          url: this.config.ipnUrl,
-          ipn_notification_type: 'POST'
-        })
-      });
-
-      const responseText = await response.text();
-      console.log('IPN registration response:', responseText);
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.log('IPN registration returned non-JSON response, might be using default IPN');
-        return ''; // Return empty if can't parse, PesaPal might still work with callback
-      }
-
-      // Check different possible response formats
-      if (data.ipn_id) {
-        return data.ipn_id;
-      } else if (data.id) {
-        return data.id;
-      } else if (data.notification_id) {
-        return data.notification_id;
-      }
-      
-      console.log('No IPN ID in response, using default');
-      return ''; // Return empty if no ID, PesaPal might still work
-    } catch (error) {
-      console.error('IPN registration error:', error);
-      return ''; // Return empty on error, try to proceed without IPN
-    }
-  }
-
-  private async submitOrder(token: string, orderData: OrderData): Promise<any> {
-    const url = PESAPAL_URLS[this.config.environment].submit;
-    
-    try {
-      console.log('Submitting order to:', url);
-      console.log('Order data:', JSON.stringify(orderData, null, 2));
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(orderData)
-      });
-
-      const responseText = await response.text();
-      console.log('Order submission response:', responseText);
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Failed to parse order response as JSON:', responseText);
-        throw new Error(`Invalid order response: ${responseText.substring(0, 100)}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Order submission error:', error);
-      throw error;
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error('[PesaPal] initializePayment error:', message);
+      return { success: false, error: message };
     }
   }
 
   async verifyPaymentStatus(orderTrackingId: string): Promise<string> {
     try {
-      const token = await this.getPesaPalToken();
-      const url = `${PESAPAL_URLS[this.config.environment].status}?orderTrackingId=${orderTrackingId}`;
-      
-      console.log('Verifying payment status for:', orderTrackingId);
-      
+      const token = await this.getToken();
+      const url   = `${PESAPAL_URLS[this.config.environment].status}?orderTrackingId=${orderTrackingId}`;
+
       const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+        headers: this.jsonHeaders(token),
       });
 
-      const responseText = await response.text();
-      console.log('Status response:', responseText);
+      const data = await this.parseJson(response, 'status check');
 
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Failed to parse status response as JSON:', responseText);
-        return 'PENDING';
-      }
-
-      // Check different possible status fields
-      return data.payment_status_description || 
-             data.status_description || 
-             data.status || 
-             'PENDING';
+      // PesaPal v3 uses payment_status_description for the human-readable status.
+      return (
+        data.payment_status_description ??
+        data.status_description ??
+        data.payment_status ??
+        'PENDING'
+      );
     } catch (error) {
-      console.error('Payment verification error:', error);
+      console.error('[PesaPal] verifyPaymentStatus error:', error);
       return 'ERROR';
     }
   }
+
+  // ─── Private ───────────────────────────────────────────────────────────────
+
+  private async getToken(): Promise<string> {
+    const url = PESAPAL_URLS[this.config.environment].auth;
+
+    const response = await fetch(url, {
+      method:  'POST',
+      headers: this.jsonHeaders(),
+      body:    JSON.stringify({
+        consumer_key:    this.config.consumerKey,
+        consumer_secret: this.config.consumerSecret,
+      }),
+    });
+
+    const data = await this.parseJson(response, 'auth');
+
+    if (!data.token) {
+      throw new Error(`PesaPal auth failed: ${JSON.stringify(data)}`);
+    }
+
+    return data.token as string;
+  }
+
+  private async getOrRegisterIPN(token: string): Promise<string> {
+    // Return the env-provided IPN ID first (most reliable for production).
+    if (process.env.PESAPAL_IPN_ID) {
+      return process.env.PESAPAL_IPN_ID;
+    }
+
+    // Fall back to the in-process cache.
+    if (cachedIpnId) {
+      console.log('[PesaPal] Using cached IPN ID:', cachedIpnId);
+      return cachedIpnId;
+    }
+
+    // Register fresh and cache the result.
+    cachedIpnId = await this.registerIPN(token);
+    return cachedIpnId;
+  }
+
+  private async registerIPN(token: string): Promise<string> {
+    const url = PESAPAL_URLS[this.config.environment].ipn;
+
+    console.log('[PesaPal] Registering IPN URL:', this.config.ipnUrl);
+
+    const response = await fetch(url, {
+      method:  'POST',
+      headers: this.jsonHeaders(token),
+      body:    JSON.stringify({
+        url:                   this.config.ipnUrl,
+        ipn_notification_type: 'POST',
+      }),
+    });
+
+    const data = await this.parseJson(response, 'IPN registration');
+
+    const ipnId = data.ipn_id ?? data.id ?? data.notification_id;
+
+    if (!ipnId) {
+      // In production this is fatal — an order without a valid notification_id
+      // will be rejected by PesaPal with a 400.
+      throw new Error(
+        `IPN registration succeeded but returned no ID. Full response: ${JSON.stringify(data)}`
+      );
+    }
+
+    console.log('[PesaPal] IPN registered. ID:', ipnId);
+    console.log('[PesaPal] Tip: set PESAPAL_IPN_ID=' + ipnId + ' in your env to skip re-registration.');
+
+    return ipnId as string;
+  }
+
+  private async submitOrder(token: string, orderData: OrderData): Promise<any> {
+    const url = PESAPAL_URLS[this.config.environment].submit;
+
+    const response = await fetch(url, {
+      method:  'POST',
+      headers: this.jsonHeaders(token),
+      body:    JSON.stringify(orderData),
+    });
+
+    return this.parseJson(response, 'submit order');
+  }
+
+  // ─── Helpers ───────────────────────────────────────────────────────────────
+
+  private jsonHeaders(token?: string): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Accept':       'application/json',
+      'Content-Type': 'application/json',
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    return headers;
+  }
+
+  private async parseJson(response: Response, context: string): Promise<any> {
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error(
+        `[PesaPal] ${context}: expected JSON but got (HTTP ${response.status}): ${text.substring(0, 200)}`
+      );
+    }
+  }
+
+  /** Ensures phone numbers are in international format for PesaPal (e.g. +255712345678) */
+  private normalisePhone(phone: string): string {
+    const digits = phone.replace(/\D/g, '');
+
+    // Already has country code
+    if (digits.startsWith('255') && digits.length === 12) return `+${digits}`;
+    if (digits.startsWith('254') && digits.length === 12) return `+${digits}`;
+
+    // Local Tanzanian format: 07xxxxxxxx or 06xxxxxxxx
+    if ((digits.startsWith('07') || digits.startsWith('06')) && digits.length === 10) {
+      return `+255${digits.slice(1)}`;
+    }
+
+    // Return as-is if format is unrecognised — PesaPal will validate
+    return phone;
+  }
 }
 
-// Export a singleton instance
-export const pesapalService = new PesaPalService();
+// ─── Singleton ──────────────────────────────────────────────────────────────
+// Lazily instantiated so the constructor validation runs at request time
+// (when env vars are guaranteed to be loaded) rather than at module parse time.
+
+let _instance: PesaPalService | null = null;
+
+export function getPesaPalService(): PesaPalService {
+  if (!_instance) {
+    _instance = new PesaPalService();
+  }
+  return _instance;
+}
+
+// Named export for convenience — use getPesaPalService() instead of the old
+// `pesapalService` singleton to ensure env vars are loaded first.
+export const pesapalService = {
+  initializePayment:   (data: DonationData)    => getPesaPalService().initializePayment(data),
+  verifyPaymentStatus: (trackingId: string)     => getPesaPalService().verifyPaymentStatus(trackingId),
+};
