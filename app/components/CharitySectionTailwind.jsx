@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
 
 const ChildStorySection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,6 +21,7 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <ScrollAnimatedWrapper threshold={0.3}>
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
@@ -146,6 +148,7 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
 
         </div>
       </div>
+      </ScrollAnimatedWrapper>
     </section>
   );
 };

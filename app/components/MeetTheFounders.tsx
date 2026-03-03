@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
+import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
 
 const MeetTheFounders = () => {
   const founders = [
@@ -52,6 +53,7 @@ const MeetTheFounders = () => {
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
+      <ScrollAnimatedWrapper threshold={0.3}>
       <div className="max-w-7xl mx-auto">
 
         {/* Popup Notification */}
@@ -119,6 +121,7 @@ const MeetTheFounders = () => {
           ))}
         </div>
       </div>
+      </ScrollAnimatedWrapper>
     </section>
   );
 };

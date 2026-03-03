@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -87,9 +88,11 @@ export default function HeroSection() {
         }}
       />
 
+
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
 
         {/* Background Carousel */}
+        
         <div
           className="absolute inset-0 flex transition-transform duration-[1200ms] ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}

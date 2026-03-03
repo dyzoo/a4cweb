@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
 
 type EventType = {
   id: number;
@@ -132,7 +133,7 @@ export default function EventsSection() {
               Stories of progress, impact and change.
             </p>
           </div>
-
+<ScrollAnimatedWrapper threshold={0.3}>
           <div className="grid gap-8 md:grid-cols-3">
             {events.map((event) => {
               const isExpanded = expandedId === event.id;
@@ -189,6 +190,7 @@ export default function EventsSection() {
               );
             })}
           </div>
+          </ScrollAnimatedWrapper>
         </div>
       </section>
     </>
