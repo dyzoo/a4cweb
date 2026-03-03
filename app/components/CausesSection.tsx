@@ -1,7 +1,10 @@
+'use client'
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { useTheme } from '@/app/providers/ThemeProvider';
 
 export default function CausesSection() {
+  const { darkMode } = useTheme(); // Use global theme
   const causes = [
     {
       id: 1,

@@ -3,6 +3,7 @@ import Footer from "@/app/components/Footer";
 import ScrollingTicker from "@/app/components/Marquee";
 import RouteChangeLoader from "@/app/RouteChangeLoader";
 
+
 export default function FrontendLayout({
   children,
 }: {
