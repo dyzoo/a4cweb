@@ -1,7 +1,10 @@
-// components/DonationPage.tsx
+// app/donate/page.tsx
 'use client'
-import React, { useState } from 'react';
-import { Heart, Users, BookOpen, Droplet, Smartphone, Landmark } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Heart, Users, BookOpen, Droplet, Smartphone, Landmark,
+  Shield, Lock, Moon, Sun, ArrowRight
+} from 'lucide-react';
 
 // Define types
 type DonorDetails = {
@@ -27,11 +30,12 @@ type DonationData = {
     lastName: string;
     email: string;
     phone: string;
-  } | null;
+  };
   reference: string;
 };
 
 const DonationPage = () => {
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const [donationAmount, setDonationAmount] = useState<number | ''>('');
   const [customAmount, setCustomAmount] = useState<string>('');
   const [donorDetails, setDonorDetails] = useState<DonorDetails>({
@@ -43,6 +47,12 @@ const DonationPage = () => {
   });
   const [selectedCause, setSelectedCause] = useState<string>('general');
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Check for user's dark mode preference
+  useEffect(() => {
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDarkMode(isDark);
+  }, []);
 
   const presetAmounts: number[] = [5000, 10000, 20000, 50000, 100000];
 
@@ -64,7 +74,6 @@ const DonationPage = () => {
     setDonationAmount(value === '' ? '' : Number(value));
   };
 
-  // Initialize PesaPal payment
   const initializePesaPalPayment = async (donationData: DonationData) => {
     try {
       const response = await fetch('/api/donation/initialize', {
@@ -96,12 +105,12 @@ const DonationPage = () => {
       const donationData: DonationData = {
         amount: donationAmount,
         cause: selectedCause,
-       donor: {
-  firstName: donorDetails.isAnonymous ? "Anonymous" : donorDetails.firstName,
-  lastName: donorDetails.isAnonymous ? "Donor" : donorDetails.lastName,
-  email: donorDetails.email,
-  phone: donorDetails.phone
-},
+        donor: {
+          firstName: donorDetails.isAnonymous ? "Anonymous" : donorDetails.firstName || "Anonymous",
+          lastName: donorDetails.isAnonymous ? "Donor" : donorDetails.lastName || "Donor",
+          email: donorDetails.email,
+          phone: donorDetails.phone
+        },
         reference: generateReference()
       };
 
@@ -124,10 +133,31 @@ const DonationPage = () => {
     return 'DON-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      darkMode 
+        ? 'dark bg-gray-900' 
+        : 'bg-gradient-to-b from-orange-50 to-white'
+    }`}>
+      
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleDarkMode}
+        className={`fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all ${
+          darkMode 
+            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
+            : 'bg-white text-gray-700 hover:bg-gray-100'
+        }`}
+      >
+        {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </button>
+
       {/* Hero Section */}
-      <div className="bg-blue-900 text-white py-16">
+      <div className={`${darkMode ? 'bg-gray-800' : 'bg-blue-900'} text-white py-16`}>
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Make a Difference Today</h1>
           <p className="text-xl opacity-90 max-w-2xl mx-auto">
@@ -136,37 +166,48 @@ const DonationPage = () => {
         </div>
       </div>
 
-      
-
       {/* Main Donation Form */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className={`rounded-2xl shadow-xl overflow-hidden transition-colors ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
+          }`}>
             <div className="md:flex">
+              
               {/* Left Column - Causes */}
-              <div className="md:w-1/3 bg-orange-50 p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Impact</h2>
+              <div className={`md:w-1/3 p-8 ${
+                darkMode ? 'bg-gray-900' : 'bg-orange-50'
+              }`}>
+                <h2 className={`text-2xl font-bold mb-6 ${
+                  darkMode ? 'text-white' : 'text-gray-800'
+                }`}>
+                  Your Impact
+                </h2>
+                
                 <div className="space-y-4">
                   {causes.map((cause) => {
                     const Icon = cause.icon;
+                    const isSelected = selectedCause === cause.id;
                     return (
                       <button
                         key={cause.id}
                         onClick={() => setSelectedCause(cause.id)}
                         className={`w-full text-left p-4 rounded-xl transition-all ${
-                          selectedCause === cause.id
+                          isSelected
                             ? 'bg-orange-600 text-white shadow-lg'
-                            : 'bg-white hover:shadow-md'
+                            : darkMode
+                              ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                              : 'bg-white text-gray-700 hover:shadow-md'
                         }`}
                       >
                         <div className="flex items-center space-x-3">
-                          <Icon className={`w-6 h-6 ${
-                            selectedCause === cause.id ? 'text-white' : 'text-orange-600'
+                          <Icon className={`w-5 h-5 ${
+                            isSelected ? 'text-white' : 'text-orange-600'
                           }`} />
                           <div>
                             <h3 className="font-semibold">{cause.name}</h3>
-                            <p className={`text-sm ${
-                              selectedCause === cause.id ? 'text-orange-100' : 'text-gray-600'
+                            <p className={`text-xs ${
+                              isSelected ? 'text-orange-100' : darkMode ? 'text-gray-400' : 'text-gray-600'
                             }`}>
                               {cause.description}
                             </p>
@@ -176,30 +217,20 @@ const DonationPage = () => {
                     );
                   })}
                 </div>
-
-                {/* Impact Stats */}
-                <div className="mt-8 pt-8 border-t border-orange-200">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">500+</div>
-                      <div className="text-sm text-gray-600">Children Educated</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">1000+</div>
-                      <div className="text-sm text-gray-600">Lives Impacted</div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Right Column - Donation Form */}
               <div className="md:w-2/3 p-8">
                 <form onSubmit={handleSubmit}>
+                  
                   {/* Amount Selection */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className={`block text-sm font-medium mb-3 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
                       Select Amount (TZS)
                     </label>
+                    
                     <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-3">
                       {presetAmounts.map((amount) => (
                         <button
@@ -209,15 +240,20 @@ const DonationPage = () => {
                           className={`py-3 px-2 rounded-lg font-medium transition-all ${
                             donationAmount === amount
                               ? 'bg-orange-600 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              : darkMode
+                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
                           TZS {amount.toLocaleString()}
                         </button>
                       ))}
                     </div>
+                    
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                      <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                        darkMode ? 'text-gray-400' : 'text-gray-500'
+                      }`}>
                         TZS
                       </span>
                       <input
@@ -225,7 +261,11 @@ const DonationPage = () => {
                         placeholder="Custom amount"
                         value={customAmount}
                         onChange={handleCustomAmount}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className={`w-full pl-12 pr-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                          darkMode
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
                         min="1"
                       />
                     </div>
@@ -233,35 +273,50 @@ const DonationPage = () => {
 
                   {/* Donor Details */}
                   <div className="space-y-4 mb-6">
+                    <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                      Your Information
+                    </h3>
+                    
                     <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="First Name"
-                          value={donorDetails.firstName}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDonorDetails({...donorDetails, firstName: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          required={!donorDetails.isAnonymous}
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Last Name"
-                          value={donorDetails.lastName}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDonorDetails({...donorDetails, lastName: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          required={!donorDetails.isAnonymous}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={donorDetails.firstName}
+                        onChange={(e) => setDonorDetails({...donorDetails, firstName: e.target.value})}
+                        className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                          darkMode
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        } ${donorDetails.isAnonymous ? 'opacity-50' : ''}`}
+                        required={!donorDetails.isAnonymous}
+                        disabled={donorDetails.isAnonymous}
+                      />
+                      
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={donorDetails.lastName}
+                        onChange={(e) => setDonorDetails({...donorDetails, lastName: e.target.value})}
+                        className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                          darkMode
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        } ${donorDetails.isAnonymous ? 'opacity-50' : ''}`}
+                        required={!donorDetails.isAnonymous}
+                        disabled={donorDetails.isAnonymous}
+                      />
                     </div>
                     
                     <input
                       type="email"
                       placeholder="Email Address"
                       value={donorDetails.email}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDonorDetails({...donorDetails, email: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      onChange={(e) => setDonorDetails({...donorDetails, email: e.target.value})}
+                      className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       required
                     />
                     
@@ -269,8 +324,12 @@ const DonationPage = () => {
                       type="tel"
                       placeholder="Phone Number"
                       value={donorDetails.phone}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDonorDetails({...donorDetails, phone: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      onChange={(e) => setDonorDetails({...donorDetails, phone: e.target.value})}
+                      className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       required
                     />
 
@@ -278,14 +337,55 @@ const DonationPage = () => {
                       <input
                         type="checkbox"
                         checked={donorDetails.isAnonymous}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDonorDetails({...donorDetails, isAnonymous: e.target.checked})}
+                        onChange={(e) => setDonorDetails({...donorDetails, isAnonymous: e.target.checked})}
                         className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
                       />
-                      <span className="text-gray-700">Donate anonymously</span>
+                      <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Donate anonymously
+                      </span>
                     </label>
                   </div>
 
-                 
+                  {/* Payment Methods Preview */}
+                  <div className={`mb-6 p-4 rounded-lg ${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                  }`}>
+                    <div className="flex items-center space-x-2 mb-3">
+                      <Shield className={`w-4 h-4 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
+                      <span className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Secure Payment Options
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex items-center space-x-2">
+                        <Smartphone className={`w-4 h-4 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                        <span className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          Mobile Money (M-Pesa, Airtel, Tigo)
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Landmark className={`w-4 h-4 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                        <span className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          Bank Cards (Visa, Mastercard)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Security Badges */}
+                    <div className="flex items-center space-x-4 mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                      <div className="flex items-center space-x-1">
+                        <Lock className={`w-3 h-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          SSL Secure
+                        </span>
+                      </div>
+                      <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        PCI-DSS Compliant
+                      </span>
+                    </div>
+                  </div>
+
                   {/* Submit Button */}
                   <button
                     type="submit"
@@ -296,10 +396,22 @@ const DonationPage = () => {
                         : 'bg-orange-600 hover:bg-orange-700 shadow-lg hover:shadow-xl'
                     }`}
                   >
-                    {loading ? 'Processing...' : `Donate ${donationAmount ? `TZS ${donationAmount.toLocaleString()}` : ''}`}
+                    {loading ? (
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Processing...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>Donate {donationAmount ? `TZS ${donationAmount.toLocaleString()}` : ''}</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
+                    )}
                   </button>
 
-                
+                  <p className={`text-center text-xs mt-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    By donating, you agree to our Terms of Service and Privacy Policy
+                  </p>
                 </form>
               </div>
             </div>
