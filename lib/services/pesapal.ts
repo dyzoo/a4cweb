@@ -159,55 +159,29 @@ export class PesaPalService {
     }
   }
 
-  private async getPesaPalToken(): Promise<string> {
-    const url = PESAPAL_URLS[this.config.environment].auth;
-    
-    try {
-      console.log('Requesting token from:', url);
-      
-      // Create Basic Auth header
-      const auth = Buffer.from(`${this.config.consumerKey}:${this.config.consumerSecret}`).toString('base64');
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${auth}`
-        },
-        body: JSON.stringify({}) // Some PesaPal endpoints don't need body for token
-      });
+ private async getPesaPalToken(): Promise<string> {
+  const url = PESAPAL_URLS[this.config.environment].auth;
 
-      const responseText = await response.text();
-      console.log('Token response status:', response.status);
-      console.log('Token response text:', responseText);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      consumer_key: this.config.consumerKey,
+      consumer_secret: this.config.consumerSecret
+    })
+  });
 
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Failed to parse token response as JSON:', responseText);
-        throw new Error(`Invalid response from PesaPal: ${responseText.substring(0, 100)}`);
-      }
-      
-      // Check for token in different possible response formats
-      if (data.token) {
-        return data.token;
-      } else if (data.access_token) {
-        return data.access_token;
-      } else if (data.status === '200' || data.status === 200) {
-        if (data.token) return data.token;
-        if (data.access_token) return data.access_token;
-      }
-      
-      // If we get here, log the full response for debugging
-      console.error('Unexpected token response format:', data);
-      throw new Error(JSON.stringify(data));
-    } catch (error) {
-      console.error('Token request error:', error);
-      throw error;
-    }
+  const data = await response.json();
+
+  if (data.token) {
+    return data.token;
   }
+
+  throw new Error(JSON.stringify(data));
+}
 
   private async registerIPN(token: string): Promise<string> {
     try {

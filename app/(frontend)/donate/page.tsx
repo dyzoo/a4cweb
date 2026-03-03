@@ -96,12 +96,12 @@ const DonationPage = () => {
       const donationData: DonationData = {
         amount: donationAmount,
         cause: selectedCause,
-        donor: donorDetails.isAnonymous ? null : {
-          firstName: donorDetails.firstName,
-          lastName: donorDetails.lastName,
-          email: donorDetails.email,
-          phone: donorDetails.phone
-        },
+       donor: {
+  firstName: donorDetails.isAnonymous ? "Anonymous" : donorDetails.firstName,
+  lastName: donorDetails.isAnonymous ? "Donor" : donorDetails.lastName,
+  email: donorDetails.email,
+  phone: donorDetails.phone
+},
         reference: generateReference()
       };
 
@@ -299,9 +299,7 @@ const DonationPage = () => {
                     {loading ? 'Processing...' : `Donate ${donationAmount ? `TZS ${donationAmount.toLocaleString()}` : ''}`}
                   </button>
 
-                  <p className="text-center text-sm text-gray-500 mt-4">
-                    Secure payments powered by PesaPal • PCI-DSS Compliant [citation:5]
-                  </p>
+                
                 </form>
               </div>
             </div>
