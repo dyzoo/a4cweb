@@ -3,8 +3,10 @@
 import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function DonationFailed() {
+// Separated into its own component so Suspense can wrap it
+function DonationFailedContent() {
   const searchParams = useSearchParams();
   const reference = searchParams.get('reference');
 
@@ -16,7 +18,7 @@ export default function DonationFailed() {
         </div>
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Payment Failed</h1>
         <p className="text-gray-600 mb-6">
-          We couldn't process your donation. Please try again or contact support.
+          We couldn&apos;t process your donation. Please try again or contact support.
         </p>
         {reference && (
           <p className="text-sm text-gray-500 mb-8">
@@ -24,14 +26,14 @@ export default function DonationFailed() {
           </p>
         )}
         <div className="space-y-3">
-          <Link 
-            href="/donate" 
+          <Link
+            href="/donate"
             className="block w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 transition"
           >
             Try Again
           </Link>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition"
           >
             Return to Home
@@ -39,5 +41,17 @@ export default function DonationFailed() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DonationFailed() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Loading...</div>
+      </div>
+    }>
+      <DonationFailedContent />
+    </Suspense>
   );
 }
