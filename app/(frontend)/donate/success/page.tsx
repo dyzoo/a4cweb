@@ -3,8 +3,9 @@
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function DonationSuccess() {
+function DonationSuccessContent() {
   const searchParams = useSearchParams();
   const reference = searchParams.get('reference');
 
@@ -24,13 +25,13 @@ export default function DonationSuccess() {
           </p>
         )}
         <div className="space-y-3">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 transition"
           >
             Return to Home
           </Link>
-          <button 
+          <button
             onClick={() => window.print()}
             className="block w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition"
           >
@@ -39,5 +40,17 @@ export default function DonationSuccess() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DonationSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Loading...</div>
+      </div>
+    }>
+      <DonationSuccessContent />
+    </Suspense>
   );
 }
