@@ -13,36 +13,27 @@ export default function AdminLogin() {
     email: '',
     password: ''
   })
-// app/admin/login/page.tsx
+  // app/admin/login/page.tsx
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
-  setLoading(true)
-  setError('')
 
-  try {
-    // Update this line to use the new API path
-    const response = await fetch('/api/auth/admin/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
+  const response = await fetch('/api/auth/admin/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include', // important!
+    body: JSON.stringify(formData),
+  })
 
-    const data = await response.json()
-
-    if (response.ok) {
-      // Successful login
-      router.push('/admin')
-    } else {
-      setError(data.message || 'Invalid credentials')
-    }
-  } catch (err) {
-    setError('An error occurred. Please try again.')
-  } finally {
-    setLoading(false)
+  if (response.status === 200) {
+    router.push('/admin')
+  } else {
+    console.log('Login failed')
   }
 }
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
@@ -62,7 +53,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="admin@example.com"
               />
@@ -79,7 +70,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="••••••••"
               />
@@ -111,10 +102,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <button
             type="submit"
-            disabled={loading}
-            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+
+            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {loading ? 'Logging in...' : 'Login to Dashboard'}
           </button>

@@ -51,7 +51,8 @@ export default function HeroSection() {
 
   const handleDownload = async () => {
   try {
-    const res = await fetch("/api/download/brochure.pdf");
+    const res = await fetch("/api/download/brochure");
+
     if (!res.ok) {
       toast.error("File not found!");
       return;
