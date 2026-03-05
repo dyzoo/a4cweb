@@ -1,5 +1,6 @@
-// app/donate/page.tsx
+// app/(frontend)/donate/page.tsx
 'use client'
+
 import React, { useState } from 'react';
 import { 
   Heart, Users, BookOpen, Droplet, Smartphone, Landmark,
@@ -127,10 +128,10 @@ const DonationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="min-h-screen transition-colors duration-300 bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-800">
       
       {/* Hero Section */}
-      <div className="bg-blue-900 text-white py-16">
+      <div className="bg-blue-900 dark:bg-gray-800 text-white py-16 transition-colors duration-300">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Make a Difference Today</h1>
           <p className="text-xl opacity-90 max-w-2xl mx-auto">
@@ -142,12 +143,12 @@ const DonationPage = () => {
       {/* Main Donation Form */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="rounded-2xl shadow-xl overflow-hidden transition-colors duration-300 bg-white dark:bg-gray-800">
             <div className="md:flex">
               
               {/* Left Column - Causes */}
-              <div className="md:w-1/3 bg-orange-50 p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              <div className="md:w-1/3 p-8 transition-colors duration-300 bg-orange-50 dark:bg-gray-900">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
                   Your Impact
                 </h2>
                 
@@ -162,17 +163,17 @@ const DonationPage = () => {
                         className={`w-full text-left p-4 rounded-xl transition-all ${
                           isSelected
                             ? 'bg-orange-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:shadow-md'
+                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:shadow-md dark:hover:bg-gray-700'
                         }`}
                       >
                         <div className="flex items-center space-x-3">
                           <Icon className={`w-5 h-5 ${
-                            isSelected ? 'text-white' : 'text-orange-600'
+                            isSelected ? 'text-white' : 'text-orange-600 dark:text-orange-400'
                           }`} />
                           <div>
                             <h3 className="font-semibold">{cause.name}</h3>
                             <p className={`text-xs ${
-                              isSelected ? 'text-orange-100' : 'text-gray-600'
+                              isSelected ? 'text-orange-100' : 'text-gray-600 dark:text-gray-400'
                             }`}>
                               {cause.description}
                             </p>
@@ -190,7 +191,7 @@ const DonationPage = () => {
                   
                   {/* Amount Selection */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">
                       Select Amount (TZS)
                     </label>
                     
@@ -203,7 +204,7 @@ const DonationPage = () => {
                           className={`py-3 px-2 rounded-lg font-medium transition-all ${
                             donationAmount === amount
                               ? 'bg-orange-600 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                           }`}
                         >
                           TZS {amount.toLocaleString()}
@@ -212,7 +213,7 @@ const DonationPage = () => {
                     </div>
                     
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
                         TZS
                       </span>
                       <input
@@ -220,7 +221,7 @@ const DonationPage = () => {
                         placeholder="Custom amount"
                         value={customAmount}
                         onChange={handleCustomAmount}
-                        className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full pl-12 pr-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                         min="1"
                       />
                     </div>
@@ -228,7 +229,7 @@ const DonationPage = () => {
 
                   {/* Donor Details */}
                   <div className="space-y-4 mb-6">
-                    <h3 className="text-lg font-semibold text-gray-800">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                       Your Information
                     </h3>
                     
@@ -238,7 +239,7 @@ const DonationPage = () => {
                         placeholder="First Name"
                         value={donorDetails.firstName}
                         onChange={(e) => setDonorDetails({...donorDetails, firstName: e.target.value})}
-                        className={`w-full px-4 py-3 rounded-lg border border-gray-300 transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                        className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ${
                           donorDetails.isAnonymous ? 'opacity-50' : ''
                         }`}
                         required={!donorDetails.isAnonymous}
@@ -250,7 +251,7 @@ const DonationPage = () => {
                         placeholder="Last Name"
                         value={donorDetails.lastName}
                         onChange={(e) => setDonorDetails({...donorDetails, lastName: e.target.value})}
-                        className={`w-full px-4 py-3 rounded-lg border border-gray-300 transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+                        className={`w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ${
                           donorDetails.isAnonymous ? 'opacity-50' : ''
                         }`}
                         required={!donorDetails.isAnonymous}
@@ -263,7 +264,7 @@ const DonationPage = () => {
                       placeholder="Email Address"
                       value={donorDetails.email}
                       onChange={(e) => setDonorDetails({...donorDetails, email: e.target.value})}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                       required
                     />
                     
@@ -272,7 +273,7 @@ const DonationPage = () => {
                       placeholder="Phone Number"
                       value={donorDetails.phone}
                       onChange={(e) => setDonorDetails({...donorDetails, phone: e.target.value})}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border transition-all focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                       required
                     />
 
@@ -281,47 +282,47 @@ const DonationPage = () => {
                         type="checkbox"
                         checked={donorDetails.isAnonymous}
                         onChange={(e) => setDonorDetails({...donorDetails, isAnonymous: e.target.checked})}
-                        className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                        className="w-4 h-4 rounded focus:ring-orange-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-400"
                       />
-                      <span className="text-sm text-gray-700">
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
                         Donate anonymously
                       </span>
                     </label>
                   </div>
 
                   {/* Payment Methods Preview */}
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="mb-6 p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
                     <div className="flex items-center space-x-2 mb-3">
-                      <Shield className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-gray-700">
+                      <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Secure Payment Options
                       </span>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center space-x-2">
-                        <Smartphone className="w-4 h-4 text-orange-600" />
-                        <span className="text-xs text-gray-600">
+                        <Smartphone className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-300">
                           Mobile Money (M-Pesa, Airtel, Tigo)
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Landmark className="w-4 h-4 text-orange-600" />
-                        <span className="text-xs text-gray-600">
+                        <Landmark className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-300">
                           Bank Cards (Visa, Mastercard)
                         </span>
                       </div>
                     </div>
 
                     {/* Security Badges */}
-                    <div className="flex items-center space-x-4 mt-3 pt-3 border-t border-gray-200">
+                    <div className="flex items-center space-x-4 mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                       <div className="flex items-center space-x-1">
-                        <Lock className="w-3 h-3 text-gray-500" />
-                        <span className="text-xs text-gray-500">
+                        <Lock className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           SSL Secure
                         </span>
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         PCI-DSS Compliant
                       </span>
                     </div>
@@ -333,8 +334,8 @@ const DonationPage = () => {
                     disabled={!donationAmount || loading}
                     className={`w-full py-4 px-6 rounded-lg text-white font-bold text-lg transition-all ${
                       !donationAmount || loading
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-orange-600 hover:bg-orange-700 shadow-lg hover:shadow-xl'
+                        ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
+                        : 'bg-orange-600 hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600 shadow-lg hover:shadow-xl'
                     }`}
                   >
                     {loading ? (
@@ -350,7 +351,7 @@ const DonationPage = () => {
                     )}
                   </button>
 
-                  <p className="text-center text-xs text-gray-500 mt-4">
+                  <p className="text-center text-xs mt-4 text-gray-500 dark:text-gray-400">
                     By donating, you agree to our Terms of Service and Privacy Policy
                   </p>
                 </form>

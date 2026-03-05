@@ -1,6 +1,12 @@
+// components/Testimonials.tsx
+'use client'
+
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { useTheme } from "@/app/providers/ThemeProvider";
 
 export default function Testimonials() {
+  const { darkMode } = useTheme();
+  
   const testimonials = [
     {
       id: 1,
@@ -26,11 +32,22 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="py-20 bg-gray-50 mx-auto px-4 w-full">
+    <section className={`
+      py-20 w-full transition-colors duration-300
+      ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}
+    `}>
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-gray-900">Stories of Impact</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto dark:text-gray-900">
+          <h2 className={`
+            text-3xl md:text-4xl font-bold mb-4 transition-colors duration-300
+            ${darkMode ? 'text-white' : 'text-gray-900'}
+          `}>
+            Stories of Impact
+          </h2>
+          <p className={`
+            text-lg max-w-3xl mx-auto transition-colors duration-300
+            ${darkMode ? 'text-gray-300' : 'text-gray-600'}
+          `}>
             Hear from those who have been touched by our work.
           </p>
         </div>
@@ -38,18 +55,45 @@ export default function Testimonials() {
         <div className="flex justify-center">
           <div className="grid md:grid-cols-3 gap-8 w-full max-w-6xl">
             {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white p-8 rounded-lg shadow-sm">
+              <div 
+                key={testimonial.id} 
+                className={`
+                  p-8 rounded-lg shadow-sm transition-all duration-300
+                  hover:shadow-lg hover:-translate-y-1
+                  ${darkMode 
+                    ? 'bg-gray-700' 
+                    : 'bg-white'
+                  }
+                `}
+              >
                 <div className="flex items-center mb-4">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={testimonial.avatar} />
-                    <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className={darkMode ? 'bg-gray-600 text-gray-200' : ''}>
+                      {testimonial.name.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="ml-4">
-                    <h4 className="font-semibold dark:text-gray-900">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground dark:text-gray-900">{testimonial.role}</p>
+                    <h4 className={`
+                      font-semibold transition-colors duration-300
+                      ${darkMode ? 'text-white' : 'text-gray-900'}
+                    `}>
+                      {testimonial.name}
+                    </h4>
+                    <p className={`
+                      text-sm transition-colors duration-300
+                      ${darkMode ? 'text-gray-400' : 'text-gray-500'}
+                    `}>
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
-                <p className="text-muted-foreground dark:text-gray-900">"{testimonial.content}"</p>
+                <p className={`
+                  transition-colors duration-300
+                  ${darkMode ? 'text-gray-300' : 'text-gray-600'}
+                `}>
+                  "{testimonial.content}"
+                </p>
               </div>
             ))}
           </div>

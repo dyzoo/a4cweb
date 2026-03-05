@@ -1,10 +1,12 @@
+// components/HeroSection.tsx
 "use client";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-
+import { useTheme } from "@/app/providers/ThemeProvider";
 
 export default function HeroSection() {
+  const { darkMode } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
@@ -51,48 +53,46 @@ export default function HeroSection() {
   }, [currentText, isDeleting, currentWordIndex]);
 
   const handleDownload = async () => {
-  try {
-    const res = await fetch("/api/download/brochure");
+    try {
+      const res = await fetch("/api/download/brochure");
 
-    if (!res.ok) {
-      toast.error("File not found!");
-      return;
+      if (!res.ok) {
+        toast.error("File not found!");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "brochure.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast.success("Download has started!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to download file");
     }
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "brochure.pdf"; // downloaded filename
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    toast.success("Download has started!");
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to download file");
-  }
-};
-
+  };
 
   return (
     <>
-      {/* Local Toaster — only affects this component */}
+      {/* Toaster with dark mode support */}
       <Toaster
         position="top-center"
         toastOptions={{
           style: {
             marginTop: "80px",
             zIndex: 999999,
+            backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+            color: darkMode ? '#ffffff' : '#000000',
           },
         }}
       />
 
-
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-
         {/* Background Carousel */}
-        
         <div
           className="absolute inset-0 flex transition-transform duration-[1200ms] ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -107,8 +107,10 @@ export default function HeroSection() {
           ))}
         </div>
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-blue-900/70"></div>
+        {/* Dark overlay - slightly different opacity for dark mode */}
+        <div className={`absolute inset-0 transition-colors duration-300 ${
+          darkMode ? 'bg-blue-900/80' : 'bg-blue-900/70'
+        }`}></div>
 
         {/* Content */}
         <div className="container relative z-10 text-center text-white px-4">
@@ -125,7 +127,7 @@ export default function HeroSection() {
               onClick={handleDownload}
               variant="outline"
               size="lg"
-              className="
+              className={`
                 text-white 
                 border-white
                 hover:text-white
@@ -135,7 +137,8 @@ export default function HeroSection() {
                 hover:border-orange-600
                 hover:scale-105
                 cursor-pointer
-              "
+                ${darkMode ? 'hover:shadow-orange-500/50 hover:shadow-lg' : ''}
+              `}
             >
               Download Our Brochure
             </Button>
@@ -149,7 +152,6 @@ export default function HeroSection() {
                 <span className="ml-1 animate-pulse">|</span>
               </span>
             </div>
-            
           </div>
         </div>
 
@@ -159,9 +161,14 @@ export default function HeroSection() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                currentSlide === index ? "bg-white w-6" : "bg-white/50"
-              }`}
+              className={`
+                w-3 h-3 rounded-full transition-all 
+                ${currentSlide === index 
+                  ? "bg-white w-6" 
+                  : darkMode ? "bg-white/40" : "bg-white/50"
+                }
+                hover:bg-white/80
+              `}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

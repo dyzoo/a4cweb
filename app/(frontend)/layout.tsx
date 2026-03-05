@@ -4,18 +4,24 @@ import ScrollingTicker from "@/app/components/Marquee";
 import RouteChangeLoader from "@/app/RouteChangeLoader";
 
 
+
 export default function FrontendLayout({
   children,
 }: {
   children: React.ReactNode;
+  
 }) {
+   console.log('Frontend layout rendering');
   return (
     <>
       <RouteChangeLoader />
+      
       <Navbar />
       <ScrollingTicker />
+       
       <main className="min-h-screen">{children}</main>
       <Footer />
+      
     </>
   );
 }

@@ -11,8 +11,10 @@ import {
   DocumentArrowUpIcon,
   CheckCircleIcon 
 } from '@heroicons/react/24/outline';
+import { useTheme } from "@/app/providers/ThemeProvider";
 
 export default function VolunteerPage() {
+  const { darkMode } = useTheme();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -155,23 +157,39 @@ export default function VolunteerPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+      <div className={`min-h-screen transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8 ${
+        darkMode 
+          ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+          : 'bg-gradient-to-br from-blue-50 to-green-50'
+      }`}>
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
-            <CheckCircleIcon className="h-16 w-16 text-green-500 dark:text-green-400 mx-auto mb-6" />
+          <div className={`rounded-2xl shadow-xl p-8 text-center transition-colors duration-300 ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
+          }`}>
+            <CheckCircleIcon className={`h-16 w-16 mx-auto mb-6 ${
+              darkMode ? 'text-green-400' : 'text-green-500'
+            }`} />
             
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className={`text-3xl font-bold mb-4 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
               Hi {formData.firstName},
             </h1>
 
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+            <p className={`text-lg mb-6 ${
+              darkMode ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               Thank you for your interest in volunteering with us. 
               We have successfully received your application and our team will contact you within 3–5 business days.
             </p>
 
             <button
               onClick={() => window.location.href = '/'}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+              className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                darkMode 
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
             >
               Return to Home
             </button>
@@ -182,27 +200,43 @@ export default function VolunteerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className={`min-h-screen transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+        : 'bg-gradient-to-br from-blue-50 to-green-50'
+    }`}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Become a Volunteer</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <h1 className={`text-4xl font-bold mb-4 ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            Become a Volunteer
+          </h1>
+          <p className={`text-xl max-w-2xl mx-auto ${
+            darkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             Join our mission to create lasting change. Your time and skills can make a difference in children's lives across Tanzania.
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <div className={`rounded-2xl shadow-xl p-8 transition-colors duration-300 ${
+          darkMode ? 'bg-gray-800' : 'bg-white'
+        }`}>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                <label htmlFor="firstName" className={`block text-sm font-semibold mb-2 ${
+                  darkMode ? 'text-gray-200' : 'text-gray-700'
+                }`}>
                   First Name *
                 </label>
                 <div className="relative">
-                  <UserIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <UserIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
                   <input
                     type="text"
                     id="firstName"
@@ -210,18 +244,26 @@ export default function VolunteerPage() {
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    }`}
                     placeholder="Enter your first name"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                <label htmlFor="lastName" className={`block text-sm font-semibold mb-2 ${
+                  darkMode ? 'text-gray-200' : 'text-gray-700'
+                }`}>
                   Last Name *
                 </label>
                 <div className="relative">
-                  <UserIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <UserIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
                   <input
                     type="text"
                     id="lastName"
@@ -229,7 +271,11 @@ export default function VolunteerPage() {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -238,17 +284,25 @@ export default function VolunteerPage() {
 
             {/* Phone Number */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              <label htmlFor="phone" className={`block text-sm font-semibold mb-2 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Phone Number *
               </label>
               <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <PhoneIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <PhoneIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-8 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none"
+                    className={`w-full pl-10 pr-8 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   >
                     {countryCodes.map(({ code, country }) => (
                       <option key={code} value={code}>
@@ -256,7 +310,9 @@ export default function VolunteerPage() {
                       </option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                  <div className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -269,7 +325,11 @@ export default function VolunteerPage() {
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="flex-2 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className={`flex-2 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
                   placeholder="Phone number"
                 />
               </div>
@@ -277,11 +337,15 @@ export default function VolunteerPage() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              <label htmlFor="email" className={`block text-sm font-semibold mb-2 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Email Address *
               </label>
               <div className="relative">
-                <EnvelopeIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <EnvelopeIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                  darkMode ? 'text-gray-500' : 'text-gray-400'
+                }`} />
                 <input
                   type="email"
                   id="email"
@@ -289,7 +353,11 @@ export default function VolunteerPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -297,18 +365,26 @@ export default function VolunteerPage() {
 
             {/* Date of Birth */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Date of Birth *
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative">
-                  <CalendarIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2 z-10" />
+                  <CalendarIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 z-10 ${
+                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                  }`} />
                   <select
                     name="birthYear"
                     required
                     value={formData.birthYear}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white relative z-0"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none relative z-0 ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   >
                     <option value="">Year</option>
                     {years.map(year => (
@@ -322,7 +398,11 @@ export default function VolunteerPage() {
                   required
                   value={formData.birthMonth}
                   onChange={handleInputChange}
-                  className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className={`px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
                 >
                   <option value="">Month</option>
                   {months.map(month => (
@@ -335,7 +415,11 @@ export default function VolunteerPage() {
                   required
                   value={formData.birthDate}
                   onChange={handleInputChange}
-                  className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className={`px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
                 >
                   <option value="">Date</option>
                   {dates.map(date => (
@@ -347,11 +431,15 @@ export default function VolunteerPage() {
 
             {/* Location */}
             <div>
-              <label htmlFor="location" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              <label htmlFor="location" className={`block text-sm font-semibold mb-2 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Current Location *
               </label>
               <div className="relative">
-                <MapPinIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <MapPinIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                  darkMode ? 'text-gray-500' : 'text-gray-400'
+                }`} />
                 <input
                   type="text"
                   id="location"
@@ -359,7 +447,11 @@ export default function VolunteerPage() {
                   required
                   value={formData.location}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
                   placeholder="City, Country"
                 />
               </div>
@@ -367,18 +459,32 @@ export default function VolunteerPage() {
 
             {/* CV Upload */}
             <div>
-              <label htmlFor="cv" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              <label htmlFor="cv" className={`block text-sm font-semibold mb-2 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Upload CV (PDF, max 5MB) *
               </label>
               <div 
-                className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors bg-white dark:bg-gray-700"
+                className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600' 
+                    : 'bg-white border-gray-300'
+                }`}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
-                <p className="text-gray-600 dark:text-gray-300 mb-2">
+                <DocumentArrowUpIcon className={`h-12 w-12 mx-auto mb-3 ${
+                  darkMode ? 'text-gray-500' : 'text-gray-400'
+                }`} />
+                <p className={`mb-2 ${
+                  darkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}>
                   {formData.cv ? formData.cv.name : 'Click to upload your CV'}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">PDF, DOC, DOCX (Max 5MB)</p>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`}>
+                  PDF, DOC, DOCX (Max 5MB)
+                </p>
                 <input
                   type="file"
                   id="cv"
@@ -390,7 +496,9 @@ export default function VolunteerPage() {
                 />
               </div>
               {formData.cv && (
-                <p className="text-sm text-green-600 dark:text-green-400 mt-2 flex items-center">
+                <p className={`text-sm mt-2 flex items-center ${
+                  darkMode ? 'text-green-400' : 'text-green-600'
+                }`}>
                   <CheckCircleIcon className="h-4 w-4 mr-1" />
                   File selected: {formData.cv.name} ({(formData.cv.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
@@ -398,18 +506,30 @@ export default function VolunteerPage() {
             </div>
 
             {/* CAPTCHA */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg">
-              <label htmlFor="captcha" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
+            <div className={`p-6 rounded-lg ${
+              darkMode ? 'bg-gray-700/50' : 'bg-gray-50'
+            }`}>
+              <label htmlFor="captcha" className={`block text-sm font-semibold mb-4 ${
+                darkMode ? 'text-gray-200' : 'text-gray-700'
+              }`}>
                 Security Verification *
               </label>
               <div className="flex items-center gap-4">
-                <div className="flex-1 bg-white dark:bg-gray-800 p-4 rounded border-2 border-gray-300 dark:border-gray-600 font-mono text-2xl text-center tracking-widest select-none text-gray-900 dark:text-white">
+                <div className={`flex-1 p-4 rounded border-2 font-mono text-2xl text-center tracking-widest select-none ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}>
                   {captchaText}
                 </div>
                 <button
                   type="button"
                   onClick={generateCaptcha}
-                  className="px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold cursor-pointer"
+                  className={`px-4 py-2 text-sm font-semibold cursor-pointer ${
+                    darkMode 
+                      ? 'text-blue-400 hover:text-blue-300' 
+                      : 'text-blue-600 hover:text-blue-800'
+                  }`}
                 >
                   Refresh
                 </button>
@@ -419,7 +539,11 @@ export default function VolunteerPage() {
                 id="captcha"
                 value={userCaptcha}
                 onChange={(e) => setUserCaptcha(e.target.value)}
-                className="w-full mt-4 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className={`w-full mt-4 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                }`}
                 placeholder="Enter the code above"
                 required
               />
@@ -429,7 +553,15 @@ export default function VolunteerPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-800 to-orange-600 dark:from-blue-600 dark:to-orange-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-900 hover:to-orange-700 dark:hover:from-blue-700 dark:hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transform hover:-translate-y-1 hover:scale-105 cursor-pointer"
+              className={`
+                w-full bg-gradient-to-r text-white py-4 px-6 rounded-lg font-semibold text-lg 
+                transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                flex items-center justify-center transform hover:-translate-y-1 hover:scale-105 cursor-pointer
+                ${darkMode 
+                  ? 'from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600' 
+                  : 'from-blue-800 to-orange-600 hover:from-blue-900 hover:to-orange-700'
+                }
+              `}
             >
               {isSubmitting ? (
                 <>
@@ -441,7 +573,9 @@ export default function VolunteerPage() {
               )}
             </button>
 
-            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            <p className={`text-sm text-center ${
+              darkMode ? 'text-gray-400' : 'text-gray-500'
+            }`}>
               By submitting this form, you agree to our privacy policy and terms of service.
             </p>
           </form>
