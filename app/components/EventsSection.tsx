@@ -36,7 +36,7 @@ export default function EventsSection() {
     {
       id: 2,
       title: "Nane Nane 2025",
-      date: "8 August 2023",
+      date: "08 August 2023",
       time: "9:00 AM - 3:00 PM",
       location: "Various Locations",
       description:
@@ -47,15 +47,15 @@ export default function EventsSection() {
     },
     {
       id: 3,
-      title: "Education Summit",
-      date: "20 December 2023",
+      title: "Women's Day",
+      date: "08 March 2026",
       time: "10:00 AM - 4:00 PM",
       location: "Convention Center",
       description:
-        "Experts discuss innovative solutions to educational inequality.",
-      image: "/event11.jpeg",
+        "Happy Women's Day.",
+      image: "/womens_day.png",
       details:
-        "Panels will include educators, policymakers, and NGO leaders.",
+        "Aid 4 children Tanzania wishes y'all a Happy Women's Day.",
     },
   ];
 
