@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
+import ScrollAnimatedWrapper from '@/app/components/ScrollAnimatedWrapper';
 
 const AboutUs = () => {
   const [activeStory, setActiveStory] = useState(0);
@@ -121,6 +122,7 @@ const AboutUs = () => {
 
       {/* Our Story Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <ScrollAnimatedWrapper>
         <div className="max-w-7xl mx-auto">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
             <div className="mb-12 lg:mb-0">
@@ -155,10 +157,12 @@ const AboutUs = () => {
 </div>
           </div>
         </div>
+         </ScrollAnimatedWrapper>
       </section>
 
       {/* Mission and Vision Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+         <ScrollAnimatedWrapper>
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12">
             {missionVision.map((item, index) => (
@@ -174,10 +178,12 @@ const AboutUs = () => {
             ))}
           </div>
         </div>
+         </ScrollAnimatedWrapper>
       </section>
 
       {/* Impact Stories Section - Replaced Our Impact */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-900 to-blue-950">
+         <ScrollAnimatedWrapper>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Our Impact Initiatives</h2>
@@ -277,10 +283,12 @@ const AboutUs = () => {
             ))}
           </div>
         </div>
+         </ScrollAnimatedWrapper>
       </section>
 
       {/* Meet the Founders Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
+         <ScrollAnimatedWrapper>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Meet the Founders</h2>
@@ -317,10 +325,12 @@ const AboutUs = () => {
             ))}
           </div>
         </div>
+          </ScrollAnimatedWrapper>
       </section>
 
       {/* Call to Action Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+         <ScrollAnimatedWrapper>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Join Our Mission</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -335,6 +345,7 @@ const AboutUs = () => {
             </button>
           </div>
         </div>
+        </ScrollAnimatedWrapper>
       </section>
     </div>
   );

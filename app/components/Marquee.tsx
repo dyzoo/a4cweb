@@ -6,7 +6,7 @@ export default function StickyMarquee() {
   const [isVisible, setIsVisible] = useState(true);
 
   const announcement =
-    "Urgent: School supplies needed for upcoming academic year - Your support can make a difference!";
+    "AID 4 CHILDREN TANZANIA wishes y'all a Happy Women's Day 08 March 2026";
 
   if (!isVisible) return null;
 

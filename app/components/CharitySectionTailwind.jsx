@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
+import Link from 'next/link';
 
 const ChildStorySection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -32,7 +33,7 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
                 <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
                 <span className="text-blue-700 font-semibold text-sm uppercase tracking-wider">
-                  Real Story
+                  SOMESHA MMOJA TU
                 </span>
               </div>
               
@@ -78,9 +79,11 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
                             hope, and a brighter future.
                           </p>
 
-                          <button className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg">
+                          <Link href="/donate">
+                          <button className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg cursor-pointer">
                             Donate Now
                           </button>
+                          </Link>
                         </div>
                       )}
                     </div>
@@ -94,7 +97,7 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
                 <div className="pt-6 border-t border-gray-100">
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 w-full lg:w-auto hover:shadow-xl hover:shadow-blue-200 transition-all duration-300"
+                    className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 w-full lg:w-auto hover:shadow-xl hover:shadow-blue-200 transition-all duration-300 cursor-pointer"
                   >
                     <span>{isExpanded ? 'Show Less' : 'Read Full Story'}</span>
                     <svg 

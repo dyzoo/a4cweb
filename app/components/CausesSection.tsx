@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { useTheme } from "@/app/providers/ThemeProvider";
+import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
 
 export default function CausesSection() {
   const { darkMode } = useTheme();
@@ -36,6 +37,7 @@ export default function CausesSection() {
       min-h-screen w-full flex items-center justify-center py-20 transition-colors duration-300
       ${darkMode ? 'bg-gray-100' : 'bg-blue-950'}
     `}>
+      <ScrollAnimatedWrapper threshold={0.3}>
       <div className="container max-w-6xl px-4 mx-auto">
         <div className="text-center mb-16">
           <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
@@ -193,7 +195,7 @@ export default function CausesSection() {
         </div>
         </div>
 
-
+          </ScrollAnimatedWrapper>
     </section>
   );
 }

@@ -3,6 +3,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { useTheme } from "@/app/providers/ThemeProvider";
+import ScrollAnimatedWrapper from "./ScrollAnimatedWrapper";
 
 export default function Testimonials() {
   const { darkMode } = useTheme();
@@ -36,6 +37,7 @@ export default function Testimonials() {
       py-20 w-full transition-colors duration-300
       ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}
     `}>
+      <ScrollAnimatedWrapper>
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className={`
@@ -99,6 +101,7 @@ export default function Testimonials() {
           </div>
         </div>
       </div>
+      </ScrollAnimatedWrapper>
     </section>
   );
 }
