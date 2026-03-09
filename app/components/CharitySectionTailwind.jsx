@@ -92,7 +92,7 @@ With your partnership, Fatima's story can have a different ending one where she 
                                 <h4 className="text-xl font-bold mb-2">Sponsor Fatima's Education</h4>
                                 <p className="text-blue-100 mb-4">
                                   A full sponsorship covers tuition, health insurance, learning materials, 
-                                  and nutrition support — from primary school through university graduation.
+                                  and nutrition support from primary school through university graduation.
                                 </p>
                                 <Link href="/donate">
                                   <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl text-lg transition-all duration-300 shadow-lg cursor-pointer">
