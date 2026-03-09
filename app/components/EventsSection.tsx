@@ -36,7 +36,7 @@ export default function EventsSection() {
     {
       id: 2,
       title: "Nane Nane 2025",
-      date: "5 November 2023",
+      date: "8 August 2023",
       time: "9:00 AM - 3:00 PM",
       location: "Various Locations",
       description:
@@ -101,7 +101,7 @@ export default function EventsSection() {
       {selectedEvent && (
         <div
           id="image-modal-backdrop"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-100 p-4"
           onClick={handleModalClick}
         >
           <button
