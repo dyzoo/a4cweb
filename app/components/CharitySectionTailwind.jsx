@@ -94,7 +94,7 @@ With your partnership, Fatima's story can have a different ending one where she 
                                   A full sponsorship covers tuition, health insurance, learning materials, 
                                   and nutrition support from primary school through university graduation.
                                 </p>
-                                <Link href="/donate">
+                                <Link href="/BecomeSponsorPage">
                                   <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl text-lg transition-all duration-300 shadow-lg cursor-pointer">
                                     Become a Sponsor
                                   </button>

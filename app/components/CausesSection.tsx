@@ -6,15 +6,26 @@ import { Button } from './ui/button';
 import { useTheme } from "@/app/providers/ThemeProvider";
 import ScrollAnimatedWrapper from './ScrollAnimatedWrapper';
 
+interface Cause {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  isStory?: boolean;
+  storyPath?: string;
+  projectPath?: string;
+}
+
 export default function CausesSection() {
   const { darkMode } = useTheme();
   
-  const causes = [
+  const causes: Cause[] = [
     {
       id: 1,
       title: "Edumisha",
       description: "Providing school supplies and scholarships to underprivileged children.",
-      image: "/Edumisha_img.jpg"
+      image: "/Edumisha_img.jpg",
+      projectPath: "/projects/A4C-Edumisha-project"
     },
     {
       id: 2,
@@ -31,6 +42,12 @@ export default function CausesSection() {
       storyPath: "/stories/a4c-afya-story"
     }
   ];
+
+  // Helper to get the link for a cause
+  const getProjectLink = (cause: Cause): string => {
+    if (cause.isStory) return cause.storyPath || "/stories";
+    return cause.projectPath || "/projects";
+  };
 
   return (
     <section className={`
@@ -174,7 +191,7 @@ export default function CausesSection() {
                       </Link>
                     </div>
                   ) : (
-                    <Link href={`/causes/${cause.id}`}>
+                    <Link href={getProjectLink(cause)}>
                       <Button
                         variant="default"
                         className={`
