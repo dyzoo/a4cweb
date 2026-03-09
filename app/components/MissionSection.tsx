@@ -4,7 +4,7 @@
 
 export default function MissionStatement() {
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+    <section className="py-20 bg-gray-50 dark:bg-gray-100 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-16">
@@ -17,7 +17,7 @@ export default function MissionStatement() {
         <div className="grid md:grid-cols-3 gap-8">
 
           {/* Mission Card */}
-          <div className="p-8 rounded-lg shadow-md border-t-4 border-orange-600 bg-white dark:bg-gray-700 transition-colors duration-300">
+          <div className="p-8 rounded-lg shadow-md border-t-4 border-orange-600 bg-white dark:bg-gray-100 transition-colors duration-300">
             
             <div className="flex items-center mb-6">
               
@@ -49,7 +49,7 @@ export default function MissionStatement() {
 
 
           {/* Vision Card */}
-          <div className="p-8 rounded-lg shadow-md border-t-4 border-blue-900 bg-white dark:bg-gray-700 transition-colors duration-300">
+          <div className="p-8 rounded-lg shadow-md border-t-4 border-blue-900 bg-white dark:bg-gray-100 transition-colors duration-300">
 
             <div className="flex items-center mb-6">
 

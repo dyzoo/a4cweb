@@ -619,23 +619,23 @@ export default function ProjectPage() {
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Learning Outcomes</h3>
+                <h3 className="text-lg font-bold text-black mb-4">Learning Outcomes</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
                     <Laptop className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 dark:text-gray-300">Master essential computer applications</span>
+                    <span className="text-gray-700 dark:text-black">Master essential computer applications</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Sparkles className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 dark:text-gray-300">Create professional designs</span>
+                    <span className="text-gray-700 dark:text-black">Create professional designs</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Globe className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 dark:text-gray-300">Build responsive websites</span>
+                    <span className="text-gray-700 dark:text-black">Build responsive websites</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Award className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 dark:text-gray-300">Understand AI fundamentals</span>
+                    <span className="text-gray-700 dark:text-black">Understand AI fundamentals</span>
                   </li>
                 </ul>
               </div>
@@ -647,7 +647,7 @@ export default function ProjectPage() {
         {activeTab === 'impact' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Impact</h2>
+              <h2 className="text-2xl font-bold text-black mb-4">Our Impact</h2>
               
               {/* Impact Stats */}
               <div className="grid grid-cols-2 gap-4">
