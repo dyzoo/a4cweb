@@ -37,8 +37,9 @@ export default function CausesSection() {
       min-h-screen w-full flex items-center justify-center py-20 transition-colors duration-300
       ${darkMode ? 'bg-gray-100' : 'bg-blue-950'}
     `}>
-      <ScrollAnimatedWrapper threshold={0.3}>
+      
       <div className="container max-w-6xl px-4 mx-auto">
+        <ScrollAnimatedWrapper>
         <div className="text-center mb-16">
           <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
             darkMode ? 'text-blue-900' : 'text-white'
@@ -192,10 +193,12 @@ export default function CausesSection() {
               </div>
             );
           })}
+          
         </div>
+        </ScrollAnimatedWrapper>
         </div>
 
-          </ScrollAnimatedWrapper>
+          
     </section>
   );
 }

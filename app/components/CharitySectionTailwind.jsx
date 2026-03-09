@@ -10,18 +10,28 @@ const ChildStorySection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const storyContent = {
-    short: "Aarav, a bright 8-year-old from a remote village, dreams of becoming a doctor. But without access to proper education and books, his future hangs in the balance...",
-    full: `Aarav, a bright 8-year-old from a remote village, dreams of becoming a doctor. Every day, he walks 5 kilometers to a makeshift school with torn textbooks and broken chalkboards.
+    short: "Fatima, a brilliant 10-year-old from a marginalized community, dreams of becoming a surgeon. But without access to quality education, health insurance, or financial support, her path to university seems impossible...",
+    full: `Fatima is a 10-year-old girl with an extraordinary gift for science. Despite walking 8 kilometers daily to attend a crowded community school with limited resources, she ranks top of her class. Her teachers describe her as "the most brilliant student in a decade."
 
-His father works as a daily wage laborer, earning barely enough to feed the family of five. Aarav's medical dream seemed impossible until our education program reached his village.
+But Fatima's family lives on less than $2 a day. Her mother is a single parent working as a street vendor. School fees, uniforms, books, and health emergencies are constant threats to Fatima's education.
 
-Today, Aarav has proper textbooks, a digital learning tablet, and access to online classes. His teacher says, "He's the most curious student I've ever taught." In just one year, Aarav's grades have improved by 75%, and he now teaches younger children after school.
+One malaria episode nearly cost her a full term of school. Without health insurance, her education hangs in the balance of every illness. Her dream of becoming a surgeon of returning to serve her community seems like a distant fantasy.
 
-"When I grow up," Aarav says, "I'll build a hospital right here in my village so no one has to walk for days to see a doctor."`
+This is why Somesha Mmoja tu exists. 
+
+Through this program, we don't just provide one-time support. We create a complete ecosystem of opportunity:
+• Full school fees coverage from primary through university
+• Comprehensive health insurance to protect against medical emergencies
+• Quality learning materials and a dedicated mentor
+• Nutritional support to ensure she can focus on learning
+
+With your partnership, Fatima's story can have a different ending one where she walks across a university stage in a white coat, ready to save lives.
+
+"The doctor who saves my community could be me," Fatima says with a determined smile. "I just need someone to believe in me."`
   };
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-orange-50">
       <ScrollAnimatedWrapper threshold={0.3}>
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -30,36 +40,37 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
           <div className="space-y-8">
             {/* Header */}
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                <span className="text-blue-700 font-semibold text-sm uppercase tracking-wider">
-                  SOMESHA MMOJA TU
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-900 rounded-full">
+                <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+                <span className="text-white font-bold text-sm uppercase tracking-wider">
+                  SOMESHA MMOJA TU — EDUCATE ONE CHILD
                 </span>
               </div>
               
-              <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
-                Meet <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Aarav</span>,
+              <h1 className="text-4xl lg:text-5xl font-extrabold text-blue-900 leading-tight">
+                Meet <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-orange-600">Fatima</span>,
                 <br />
-                The Future Doctor
+                A Future Surgeon
               </h1>
               
-              <p className="text-gray-600 text-lg font-medium">
-                One child's journey from impossible dreams to unstoppable determination
+              <p className="text-gray-700 text-lg font-medium max-w-2xl">
+                One child's entire educational journey — from primary school to university — 
+                needs your partnership. Tuition. Health insurance. Hope.
               </p>
             </div>
 
             {/* Story Card */}
-            <div className="bg-white rounded-3xl shadow-2xl shadow-blue-100/50 p-8 lg:p-10 border border-gray-100">
+            <div className="bg-white rounded-3xl shadow-2xl shadow-blue-900/10 p-8 lg:p-10 border border-gray-100">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center">
-                        <span className="text-white font-bold text-xl">A</span>
+                      <div className="w-14 h-14 bg-gradient-to-br from-blue-900 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span className="text-white font-bold text-2xl">F</span>
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-900 text-xl">Aarav's Story</h3>
-                        <p className="text-gray-500 text-sm">8 years old • Future Doctor</p>
+                        <h3 className="font-bold text-gray-900 text-xl">Fatima's Journey</h3>
+                        <p className="text-gray-500 text-sm">10 years old • Future Surgeon</p>
                       </div>
                     </div>
                     
@@ -68,85 +79,144 @@ Today, Aarav has proper textbooks, a digital learning tablet, and access to onli
                         {isExpanded ? storyContent.full : storyContent.short}
                       </p>
 
-                      {/* DONATION CTA AFTER EXPANSION */}
+                      {/* Partnership CTA AFTER EXPANSION */}
                       {isExpanded && (
-                        <div className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
-                          <h3 className="text-2xl font-extrabold mb-3">
-                            💙 Touched by Aarav's story?
-                          </h3>
-                          <p className="text-blue-100 mb-6 text-lg">
-                            Your support can help more children like Aarav access education,
-                            hope, and a brighter future.
-                          </p>
+                        <div className="mt-8 space-y-4">
+                          {/* For Donors */}
+                          <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-6 text-white shadow-xl">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span className="text-white font-bold text-lg">❤️</span>
+                              </div>
+                              <div>
+                                <h4 className="text-xl font-bold mb-2">Sponsor Fatima's Education</h4>
+                                <p className="text-blue-100 mb-4">
+                                  A full sponsorship covers tuition, health insurance, learning materials, 
+                                  and nutrition support — from primary school through university graduation.
+                                </p>
+                                <Link href="/donate">
+                                  <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl text-lg transition-all duration-300 shadow-lg cursor-pointer">
+                                    Become a Sponsor
+                                  </button>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
 
-                          <Link href="/donate">
-                          <button className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg cursor-pointer">
-                            Donate Now
-                          </button>
-                          </Link>
+                          {/* For Institutions */}
+                          <div className="bg-white border-2 border-blue-200 rounded-2xl p-6 shadow-xl">
+                            <h4 className="text-xl font-bold text-blue-900 mb-4">Partner as an Institution</h4>
+                            <div className="grid sm:grid-cols-3 gap-3">
+                              <div className="bg-orange-50 p-4 rounded-xl text-center">
+                                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                  <span className="text-orange-600 font-bold text-xl">🏥</span>
+                                </div>
+                                <h5 className="font-bold text-blue-900 text-sm">Health Insurance</h5>
+                                <p className="text-xs text-gray-600 mt-1">Provide medical coverage</p>
+                              </div>
+                              <div className="bg-blue-50 p-4 rounded-xl text-center">
+                                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                  <span className="text-blue-600 font-bold text-xl">🎓</span>
+                                </div>
+                                <h5 className="font-bold text-blue-900 text-sm">Scholarships</h5>
+                                <p className="text-xs text-gray-600 mt-1">Fund academic dreams</p>
+                              </div>
+                              <div className="bg-purple-50 p-4 rounded-xl text-center">
+                                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                  <span className="text-purple-600 font-bold text-xl">🤝</span>
+                                </div>
+                                <h5 className="font-bold text-blue-900 text-sm">Corporate Support</h5>
+                                <p className="text-xs text-gray-600 mt-1">Sponsor a child's future</p>
+                              </div>
+                            </div>
+                            <div className="mt-4 text-center">
+                              <Link href="/partner">
+                                <button className="text-blue-900 font-semibold hover:text-orange-600 transition-colors cursor-pointer">
+                                  Become a Partner →
+                                </button>
+                              </Link>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
                   
                   {/* Quote Mark */}
-                  <div className="text-blue-200 text-5xl font-black leading-none">"</div>
+                  <div className="text-blue-200 text-6xl font-black leading-none">"</div>
                 </div>
                 
                 {/* Action Button */}
                 <div className="pt-6 border-t border-gray-100">
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 w-full lg:w-auto hover:shadow-xl hover:shadow-blue-200 transition-all duration-300 cursor-pointer"
+                    className="group relative overflow-hidden bg-gradient-to-r from-blue-900 to-orange-600 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 w-full lg:w-auto hover:shadow-xl hover:shadow-blue-200 transition-all duration-300 cursor-pointer"
                   >
-                    <span>{isExpanded ? 'Show Less' : 'Read Full Story'}</span>
+                    <span className="relative z-10">{isExpanded ? 'Show Less' : 'Read Fatima\'s Full Story'}</span>
                     <svg 
-                      className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                      className={`relative z-10 w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-800 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                 </div>
               </div>
             </div>
             
-            {/* Small trust note */}
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-600 font-bold">✓</span>
+            {/* Trust indicators */}
+            <div className="flex flex-wrap items-center gap-6 text-gray-600">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-green-600 font-bold">✓</span>
+                </div>
+                <p className="text-sm font-medium">100% transparent funding</p>
               </div>
-              <p className="text-sm font-medium">
-                100% of donations go directly to supporting children's education
-              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-blue-600 font-bold">📋</span>
+                </div>
+                <p className="text-sm font-medium">Quarterly progress reports</p>
+              </div>
             </div>
           </div>
 
           {/* Image Section */}
           <div className="relative">
-            <div className="relative h-[500px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl shadow-blue-100">
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-purple-500 to-pink-400 opacity-20"></div>
+            <div className="relative h-[500px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/20">
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-orange-600/30 z-10"></div>
               
               <div className="relative w-full h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                  <Image
-                    src="/kidstory.jpg"
-                    alt="Aarav - Future Doctor"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
-                  />
+                <Image
+                  src="/AfricanGirl.jpg"
+                  alt="Fatima - Future Surgeon"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+
+              {/* Overlay Text */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/70 to-transparent z-20">
+                <p className="text-white/90 text-sm mb-2">"I just need someone to believe in me."</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-1 bg-orange-500 rounded-full"></div>
+                  <span className="text-white text-xs">— Fatima, 10 years old</span>
                 </div>
               </div>
             </div>
             
-            {/* Decorations */}
-            <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-3xl opacity-20 -z-10"></div>
-            <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-gradient-to-br from-blue-300 to-cyan-400 rounded-3xl opacity-15 -z-10"></div>
+            {/* Floating Stats Cards */}
+            <div className="absolute -top-6 -right-6 bg-white rounded-2xl shadow-xl p-4 z-30 border-l-4 border-orange-500">
+              <p className="text-sm text-gray-500">Need per child</p>
+              <p className="text-2xl font-bold text-blue-900">$5,000</p>
+              <p className="text-xs text-gray-400">Through university</p>
+            </div>
+           
           </div>
 
         </div>
