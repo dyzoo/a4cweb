@@ -101,12 +101,12 @@ export default function EventsSection() {
       {selectedEvent && (
         <div
           id="image-modal-backdrop"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-100 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
           onClick={handleModalClick}
         >
           <button
             onClick={closeExpandedImage}
-            className="absolute top-6 right-6 text-white text-3xl"
+            className="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition-colors z-50"
           >
             ✕
           </button>
@@ -125,72 +125,90 @@ export default function EventsSection() {
       )}
 
       {/* EVENTS */}
-      <section className="py-20 px-4 w-full flex justify-center">
+      <section className="py-20 px-4 w-full flex justify-center bg-gradient-to-b from-gray-50 to-white">
         <div className="w-full max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">A4C Updates</h2>
-            <p className="text-lg text-muted-foreground">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              A4C Updates
+            </h2>
+            <p className="text-lg text-gray-600">
               Stories of progress, impact and change.
             </p>
           </div>
-<ScrollAnimatedWrapper threshold={0.3}>
-          <div className="grid gap-8 md:grid-cols-3">
-            {events.map((event) => {
-              const isExpanded = expandedId === event.id;
+          
+          <ScrollAnimatedWrapper threshold={0.3}>
+            <div className="grid gap-8 md:grid-cols-3">
+              {events.map((event) => {
+                const isExpanded = expandedId === event.id;
 
-              return (
-                <div
-                  key={event.id}
-                  className="rounded-lg overflow-hidden shadow bg-white"
-                >
-                  {/* IMAGE */}
+                return (
                   <div
-                    className="relative w-full aspect-square cursor-zoom-in"
-                    onClick={(e) => handleImageClick(event.id, e)}
+                    key={event.id}
+                    className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white"
                   >
-                    <Image
-                      src={event.image}
-                      alt={event.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width:768px) 100vw, 33vw"
-                    />
-                  </div>
-
-                  <div className="p-6 dark:bg-white">
-                    <h3 className="text-xl font-semibold mb-2 dark:text-gray-900">
-                      {event.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-2">
-                      {event.date} • {event.time}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-3">
-                      {event.location}
-                    </p>
-                    <p className="text-gray-600 mb-4">{event.description}</p>
-
-                    {isExpanded && (
-                      <div className="mb-4 text-sm text-gray-700">
-                        {event.details}
-                      </div>
-                    )}
-
-                    <Button
-                      variant="outline"
-                      className="w-full cursor-pointer hover:bg-orange-600 hover:text-white dark:border-gray-900 dark:text-gray-900"
-                      
-                      onClick={() =>
-                        setExpandedId(isExpanded ? null : event.id)
-                      }
+                    {/* IMAGE */}
+                    <div
+                      className="relative w-full aspect-square cursor-zoom-in overflow-hidden group"
+                      onClick={(e) => handleImageClick(event.id, e)}
                     >
-                      {isExpanded ? "Close Details" : "Read More"}
-                    </Button>
+                      <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="(max-width:768px) 100vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                        {event.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                        <span>{event.date}</span>
+                        <span>•</span>
+                        <span>{event.time}</span>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-3 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {event.location}
+                      </p>
+                      <p className="text-gray-600 mb-4 leading-relaxed">{event.description}</p>
+
+                      {isExpanded && (
+                        <div className="mb-4 p-4 bg-gray-50 rounded-lg text-sm text-gray-700 border-l-4 border-orange-500">
+                          {event.details}
+                        </div>
+                      )}
+
+                      <Button
+                        variant="outline"
+                        className="w-full cursor-pointer hover:bg-orange-600 hover:text-white border-2 border-orange-600 text-orange-600 font-semibold transition-all duration-300 hover:scale-[1.02]"
+                        onClick={() =>
+                          setExpandedId(isExpanded ? null : event.id)
+                        }
+                      >
+                        {isExpanded ? "Close Details" : "Read More"}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
           </ScrollAnimatedWrapper>
+          
+          <div className="text-center mt-12">
+            <Button
+              variant="outline"
+              className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-8 py-6 text-lg font-semibold transition-all duration-300 hover:scale-105 cursor-pointer"
+            >
+              View All Events
+            </Button>
+          </div>
         </div>
       </section>
     </>
