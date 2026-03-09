@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import { 
   Calendar, 
@@ -139,20 +139,20 @@ const Accordion = ({ title, children, defaultOpen = false, index }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/80 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="w-full flex items-center justify-between p-5 bg-gray-50 hover:bg-gray-100 transition-colors"
       >
         <span className="font-semibold text-gray-900 dark:text-white text-lg">{title}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          <ChevronUp className="w-5 h-5 text-orange-600" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          <ChevronDown className="w-5 h-5 text-orange-600" />
         )}
       </button>
       {isOpen && (
-        <div className="p-5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        <div className="p-5 bg-white text-gray-700 dark:text-gray-300">
           {children}
         </div>
       )}
@@ -193,13 +193,13 @@ const ImageCarousel = ({ images }) => {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
       >
         <ChevronRight className="w-5 h-5" />
       </button>
@@ -210,7 +210,7 @@ const ImageCarousel = ({ images }) => {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`h-2 rounded-full transition-all ${
+            className={`h-2 rounded-full transition-all cursor-pointer ${
               index === currentIndex 
                 ? 'w-6 bg-orange-500' 
                 : 'w-2 bg-white/60 hover:bg-white'
@@ -222,9 +222,11 @@ const ImageCarousel = ({ images }) => {
   );
 };
 
-// Mini Carousel for sidebar
+// Mini Carousel for sidebar with auto-slide
 const MiniCarousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef(null);
   
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -234,41 +236,72 @@ const MiniCarousel = ({ images }) => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
   
+  // Auto-slide functionality
+  useEffect(() => {
+    if (!images || images.length === 0 || isPaused) return;
+    
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 4000); // Change slide every 4 seconds
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [images, isPaused]);
+  
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+  };
+  
   if (!images || images.length === 0) return null;
   
   return (
-    <div className="relative h-48 rounded-xl overflow-hidden group shadow-md">
+    <div 
+      className="relative h-48 rounded-xl overflow-hidden group shadow-md"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Image
         src={images[currentIndex].url}
         alt={images[currentIndex].caption}
         fill
-        className="object-cover"
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       
       <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-        <p className="text-xs">{images[currentIndex].caption}</p>
+        <p className="text-xs font-medium">{images[currentIndex].caption}</p>
       </div>
       
       <button
         onClick={prevSlide}
-        className="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
       
       <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1">
         {images.map((_, index) => (
-          <div
+          <button
             key={index}
-            className={`h-1 rounded-full transition-all ${
-              index === currentIndex ? 'w-3 bg-orange-500' : 'w-1 bg-white/60'
+            onClick={() => setCurrentIndex(index)}
+            className={`h-1 rounded-full transition-all cursor-pointer ${
+              index === currentIndex ? 'w-3 bg-orange-500' : 'w-1 bg-white/60 hover:bg-white'
             }`}
           />
         ))}
@@ -279,9 +312,9 @@ const MiniCarousel = ({ images }) => {
 
 // Stat Card Component
 const StatCard = ({ icon: Icon, label, value, color = 'blue' }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700">
-    <div className={`w-10 h-10 rounded-lg bg-${color}-100 dark:bg-${color}-900/30 flex items-center justify-center mb-3`}>
-      <Icon className={`w-5 h-5 text-${color}-600 dark:text-${color}-400`} />
+  <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-gray-100">
+    <div className={`w-10 h-10 rounded-lg bg-${color}-100 flex items-center justify-center mb-3`}>
+      <Icon className={`w-5 h-5 text-${color}-600`} />
     </div>
     <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
     <p className="text-xl font-bold text-gray-900 dark:text-white">{value}</p>
@@ -312,7 +345,7 @@ export default function ProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-16 h-16 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -326,11 +359,10 @@ export default function ProjectPage() {
     { id: 'overview', label: 'Overview', icon: BookOpen },
     { id: 'curriculum', label: 'Curriculum', icon: GraduationCap },
     { id: 'impact', label: 'Impact', icon: TrendingUp },
-    
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative h-[70vh] min-h-[600px] w-full">
         <Image
@@ -380,7 +412,7 @@ export default function ProjectPage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10 shadow-sm">
+      <div className="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex overflow-x-auto hide-scrollbar">
             {tabs.map((tab) => {
@@ -389,10 +421,10 @@ export default function ProjectPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors border-b-2 ${
+                  className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors border-b-2 cursor-pointer ${
                     activeTab === tab.id
-                      ? 'border-orange-600 text-orange-600 dark:text-orange-400'
-                      : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ? 'border-orange-600 text-orange-600'
+                      : 'border-transparent text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -411,9 +443,9 @@ export default function ProjectPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               {/* Overview Section */}
-              <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <BookOpen className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+              <section className="bg-white rounded-2xl shadow-lg p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <BookOpen className="w-6 h-6 text-orange-600" />
                   Project Overview
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -426,20 +458,20 @@ export default function ProjectPage() {
 
               {/* Challenge & Solution */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">The Challenge</h3>
+                <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">The Challenge</h3>
                   <p className="text-gray-700 dark:text-gray-300">{project.challenge}</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Our Solution</h3>
+                <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Our Solution</h3>
                   <p className="text-gray-700 dark:text-gray-300">{project.solution}</p>
                 </div>
               </div>
 
               {/* Objectives */}
-              <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Target className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+              <section className="bg-white rounded-2xl shadow-lg p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Target className="w-6 h-6 text-orange-600" />
                   Key Objectives
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -466,7 +498,7 @@ export default function ProjectPage() {
                     <div key={key} className="flex items-start gap-3">
                       <Heart className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                       <div>
-                        <span className="font-semibold text-gray-900 dark:text-white capitalize">{key}: </span>
+                        <span className="font-semibold text-gray-900 capitalize">{key}: </span>
                         <span className="text-gray-700 dark:text-gray-300">{value}</span>
                       </div>
                     </div>
@@ -477,8 +509,8 @@ export default function ProjectPage() {
               <Accordion title="Frequently Asked Questions" defaultOpen={false} index={2}>
                 <div className="space-y-4">
                   {project.faqs.map((faq, index) => (
-                    <div key={index} className="border-b border-gray-200 dark:border-gray-700 last:border-0 pb-4 last:pb-0">
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{faq.question}</h4>
+                    <div key={index} className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
+                      <h4 className="font-semibold text-gray-900 mb-2">{faq.question}</h4>
                       <p className="text-gray-700 dark:text-gray-300">{faq.answer}</p>
                     </div>
                   ))}
@@ -488,48 +520,48 @@ export default function ProjectPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Mini Carousel - Replaces Success Stories & Partners */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Camera className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+              {/* Mini Carousel - Auto-sliding */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Camera className="w-5 h-5 text-orange-600" />
                   Project Highlights
                 </h3>
-                <MiniCarousel images={project.carouselImages || project.gallery.slice(0, 4)} />
+                <MiniCarousel images={project.carouselImages} />
               </div>
 
-              {/* Key Information Card - Moved to bottom */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Facts</h3>
+              {/* Key Information Card */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Facts</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-                    <Users className="w-5 h-5 text-blue-600 dark:text-blue-400 mb-1" />
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Beneficiaries</p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white">{project.beneficiaries}</p>
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <Users className="w-5 h-5 text-blue-600 mb-1" />
+                    <p className="text-xs text-gray-600">Beneficiaries</p>
+                    <p className="text-lg font-bold text-gray-900">{project.beneficiaries}</p>
                   </div>
-                  <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
-                    <Clock className="w-5 h-5 text-orange-600 dark:text-orange-400 mb-1" />
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Duration</p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white">{project.duration}</p>
+                  <div className="bg-orange-50 p-3 rounded-lg">
+                    <Clock className="w-5 h-5 text-orange-600 mb-1" />
+                    <p className="text-xs text-gray-600">Duration</p>
+                    <p className="text-lg font-bold text-gray-900">{project.duration}</p>
                   </div>
-                  <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                    <MapPin className="w-5 h-5 text-green-600 dark:text-green-400 mb-1" />
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Location</p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white truncate">{project.location}</p>
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <MapPin className="w-5 h-5 text-green-600 mb-1" />
+                    <p className="text-xs text-gray-600">Location</p>
+                    <p className="text-lg font-bold text-gray-900 truncate">{project.location}</p>
                   </div>
-                  <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
-                    <DollarSign className="w-5 h-5 text-purple-600 dark:text-purple-400 mb-1" />
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Budget</p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white">{project.budget}</p>
+                  <div className="bg-purple-50 p-3 rounded-lg">
+                    <DollarSign className="w-5 h-5 text-purple-600 mb-1" />
+                    <p className="text-xs text-gray-600">Budget</p>
+                    <p className="text-lg font-bold text-gray-900">{project.budget}</p>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
                 <div className="mt-6">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600 dark:text-gray-400">Completion Progress</span>
-                    <span className="font-semibold text-orange-600 dark:text-orange-400">{project.completionRate}%</span>
+                    <span className="text-gray-600">Completion Progress</span>
+                    <span className="font-semibold text-orange-600">{project.completionRate}%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-orange-600 rounded-full transition-all duration-500"
                       style={{ width: `${project.completionRate}%` }}
@@ -547,7 +579,7 @@ export default function ProjectPage() {
                   </button>
                 </Link>
                 <Link href="/become-volunteer" className="block">
-                  <button className="w-full border-2 border-orange-600 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                  <button className="w-full border-2 border-orange-600 text-orange-600 hover:bg-orange-50 font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
                     <Users className="w-5 h-5" />
                     Become a Volunteer
                   </button>
@@ -561,17 +593,17 @@ export default function ProjectPage() {
         {activeTab === 'curriculum' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Training Curriculum</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Training Curriculum</h2>
               {project.curriculum.map((module, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+                <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden">
                   <div className="bg-orange-600 px-6 py-4">
                     <h3 className="text-lg font-bold text-white">{module.module}</h3>
                   </div>
                   <div className="p-6">
                     <p className="text-gray-700 dark:text-gray-300 mb-4">{module.description}</p>
-                    <p className="text-sm text-orange-600 dark:text-orange-400 font-semibold mb-3">Duration: {module.duration}</p>
+                    <p className="text-sm text-orange-600 font-semibold mb-3">Duration: {module.duration}</p>
                     <div className="space-y-2">
-                      <p className="font-semibold text-gray-900 dark:text-white">Topics covered:</p>
+                      <p className="font-semibold text-gray-900">Topics covered:</p>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {module.topics.map((topic, idx) => (
                           <li key={idx} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
@@ -586,23 +618,23 @@ export default function ProjectPage() {
               ))}
             </div>
             <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sticky top-24">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Learning Outcomes</h3>
+              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Learning Outcomes</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
-                    <Laptop className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <Laptop className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 dark:text-gray-300">Master essential computer applications</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Sparkles className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                    <Sparkles className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 dark:text-gray-300">Create professional designs</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Globe className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <Globe className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 dark:text-gray-300">Build responsive websites</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Award className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                    <Award className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 dark:text-gray-300">Understand AI fundamentals</span>
                   </li>
                 </ul>
@@ -615,36 +647,36 @@ export default function ProjectPage() {
         {activeTab === 'impact' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Impact</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Impact</h2>
               
               {/* Impact Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">150+</div>
-                  <p className="text-gray-600 dark:text-gray-400">Youth Trained Annually</p>
+                <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">150+</div>
+                  <p className="text-gray-600">Youth Trained Annually</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">100%</div>
-                  <p className="text-gray-600 dark:text-gray-400">Laptop Ownership</p>
+                <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-orange-600 mb-2">100%</div>
+                  <p className="text-gray-600">Laptop Ownership</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">85%</div>
-                  <p className="text-gray-600 dark:text-gray-400">Employment/Education Rate</p>
+                <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">85%</div>
+                  <p className="text-gray-600">Employment/Education Rate</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-center">
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">450+</div>
-                  <p className="text-gray-600 dark:text-gray-400">Alumni Network</p>
+                <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">450+</div>
+                  <p className="text-gray-600">Alumni Network</p>
                 </div>
               </div>
 
               {/* Impact List */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Key Impact Areas</h3>
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Key Impact Areas</h3>
                 <ul className="space-y-4">
                   {project.impact.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                      <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle className="w-4 h-4 text-orange-600" />
                       </div>
                       <span className="text-gray-700 dark:text-gray-300">{item}</span>
                     </li>
@@ -663,37 +695,13 @@ export default function ProjectPage() {
 
             <div className="space-y-6">
               {/* Mini Carousel in Impact Tab */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sticky top-24">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Camera className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Camera className="w-5 h-5 text-orange-600" />
                   Impact in Images
                 </h3>
-                <MiniCarousel images={project.carouselImages || project.gallery.slice(0, 4)} />
+                <MiniCarousel images={project.carouselImages} />
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Gallery Tab */}
-        {activeTab === 'gallery' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Project Gallery</h2>
-            
-            {/* Main Carousel */}
-            <ImageCarousel images={project.gallery} />
-            
-            {/* Thumbnail Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {project.gallery.map((image, index) => (
-                <div key={image.id} className="relative h-32 rounded-lg overflow-hidden cursor-pointer hover:opacity-75 transition-opacity shadow-md">
-                  <Image
-                    src={image.url}
-                    alt={image.caption}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))}
             </div>
           </div>
         )}
