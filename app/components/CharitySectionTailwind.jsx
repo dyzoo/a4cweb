@@ -54,7 +54,7 @@ With your partnership, Fatima's story can have a different ending one where she 
               </h1>
               
               <p className="text-gray-700 text-lg font-medium max-w-2xl">
-                One child's entire educational journey — from primary school to university — 
+                One child's entire educational journey from primary school to university
                 needs your partnership. Tuition. Health insurance. Hope.
               </p>
             </div>
