@@ -1,3 +1,4 @@
+
 // components/MissionStatement.tsx
 'use client'
 
@@ -7,7 +8,7 @@ export default function MissionStatement() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900 dark:text-orange-400 transition-colors duration-300">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900 dark:text-black transition-colors duration-300">
             A4C Strategic Direction
           </h2>
           <div className="h-1 w-20 bg-primary mx-auto mb-8"></div>
@@ -22,7 +23,7 @@ export default function MissionStatement() {
               
               <div className="p-3 rounded-full mr-4 bg-blue-100 dark:bg-blue-900/30 transition-colors duration-300">
                 <svg
-                  className="w-8 h-8 text-orange-600 dark:text-orange-400 transition-colors duration-300"
+                  className="w-8 h-8 text-orange-600 dark:text-black transition-colors duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -33,12 +34,12 @@ export default function MissionStatement() {
                 </svg>
               </div>
 
-              <h3 className="text-2xl font-bold text-blue-900 dark:text-orange-400 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-black transition-colors duration-300">
                 Our Mission
               </h3>
             </div>
 
-            <p className="leading-relaxed text-gray-700 dark:text-gray-300 transition-colors duration-300">
+            <p className="leading-relaxed text-gray-700 dark:text-black transition-colors duration-300">
               To empower and uplift children in difficult environments by providing
               education, healthcare, and social support. We strive to offer essential
               resources, advocacy, and a strong support network to help every child
@@ -54,7 +55,7 @@ export default function MissionStatement() {
 
               <div className="p-3 rounded-full mr-4 bg-blue-100 dark:bg-blue-900/30 transition-colors duration-300">
                 <svg
-                  className="w-8 h-8 text-blue-900 dark:text-blue-400 transition-colors duration-300"
+                  className="w-8 h-8 text-blue-900 dark:text-black transition-colors duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -69,12 +70,12 @@ export default function MissionStatement() {
                 </svg>
               </div>
 
-              <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-400 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-black transition-colors duration-300">
                 Our Vision
               </h3>
             </div>
 
-            <p className="leading-relaxed text-gray-700 dark:text-gray-300 transition-colors duration-300">
+            <p className="leading-relaxed text-gray-700 dark:text-black transition-colors duration-300">
               To create a Tanzania where every child, regardless of their
               circumstances, has the opportunity to grow, learn, and thrive in
               a safe and supportive environment.
@@ -89,7 +90,7 @@ export default function MissionStatement() {
 
               <div className="p-3 rounded-full mr-4 bg-purple-100 dark:bg-purple-900/30 transition-colors duration-300">
                 <svg
-                  className="w-8 h-8 text-orange-600 dark:text-orange-400 transition-colors duration-300"
+                  className="w-8 h-8 text-orange-600 dark:text-black transition-colors duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -103,30 +104,30 @@ export default function MissionStatement() {
                 </svg>
               </div>
 
-              <h3 className="text-2xl font-bold text-blue-900 dark:text-orange-400 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-black transition-colors duration-300">
                 Our Objectives
               </h3>
             </div>
 
-            <ul className="space-y-3 text-gray-700 dark:text-gray-300 transition-colors duration-300">
+            <ul className="space-y-3 text-gray-700 dark:text-black transition-colors duration-300">
 
               <li className="flex items-start">
-                <span className="mr-2 mt-1 text-orange-600 dark:text-orange-400">•</span>
+                <span className="mr-2 mt-1 text-orange-600 dark:text-black">•</span>
                 <span>Promote access to quality education for disadvantaged children</span>
               </li>
 
               <li className="flex items-start">
-                <span className="mr-2 mt-1 text-orange-600 dark:text-orange-400">•</span>
+                <span className="mr-2 mt-1 text-orange-600 dark:text-black">•</span>
                 <span>Advocate for improved healthcare services for children</span>
               </li>
 
               <li className="flex items-start">
-                <span className="mr-2 mt-1 text-orange-600 dark:text-orange-400">•</span>
+                <span className="mr-2 mt-1 text-orange-600 dark:text-black">•</span>
                 <span>Raise awareness on the importance of social and emotional well-being</span>
               </li>
 
               <li className="flex items-start">
-                <span className="mr-2 mt-1 text-orange-600 dark:text-orange-400">•</span>
+                <span className="mr-2 mt-1 text-orange-600 dark:text-black">•</span>
                 <span>Empower the community on supporting children's development</span>
               </li>
 
