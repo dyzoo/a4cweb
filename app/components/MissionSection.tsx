@@ -84,7 +84,7 @@ export default function MissionStatement() {
 
 
           {/* Objectives Card */}
-          <div className="p-8 rounded-lg shadow-md border-t-4 border-orange-600 bg-white dark:bg-gray-700 transition-colors duration-300">
+          <div className="p-8 rounded-lg shadow-md border-t-4 border-orange-600 bg-white dark:bg-gray-100 transition-colors duration-300">
 
             <div className="flex items-center mb-6">
 
