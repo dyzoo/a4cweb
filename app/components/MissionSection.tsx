@@ -8,7 +8,7 @@ export default function MissionStatement() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900 dark:text-black transition-colors duration-300">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900 dark:text-blue-900 transition-colors duration-300">
             A4C Strategic Direction
           </h2>
           <div className="h-1 w-20 bg-primary mx-auto mb-8"></div>
@@ -70,7 +70,7 @@ export default function MissionStatement() {
                 </svg>
               </div>
 
-              <h3 className="text-2xl font-bold text-blue-900 dark:text-black transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-900 transition-colors duration-300">
                 Our Vision
               </h3>
             </div>
@@ -104,12 +104,12 @@ export default function MissionStatement() {
                 </svg>
               </div>
 
-              <h3 className="text-2xl font-bold text-blue-900 dark:text-black transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-900 transition-colors duration-300">
                 Our Objectives
               </h3>
             </div>
 
-            <ul className="space-y-3 text-gray-700 dark:text-black transition-colors duration-300">
+            <ul className="space-y-3 text-gray-700 dark:text-blue-900 transition-colors duration-300">
 
               <li className="flex items-start">
                 <span className="mr-2 mt-1 text-orange-600 dark:text-black">•</span>

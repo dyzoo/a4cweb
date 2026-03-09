@@ -34,17 +34,18 @@ export default function CausesSection() {
   return (
     <section className={`
       min-h-screen w-full flex items-center justify-center py-20 transition-colors duration-300
-      ${darkMode ? 'bg-gray-900' : 'bg-blue-950'}
+      ${darkMode ? 'bg-gray-100' : 'bg-blue-950'}
     `}>
       <div className="container max-w-6xl px-4 mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+          <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+            darkMode ? 'text-blue-900' : 'text-white'
+          }`}>
             Projects & Touching Stories
           </h2>
-          <p className={`
-            text-lg max-w-3xl mx-auto transition-colors
-            ${darkMode ? 'text-gray-300' : 'text-white/90'}
-          `}>
+          <p className={`text-lg max-w-3xl mx-auto transition-colors ${
+            darkMode ? 'text-blue-900/80' : 'text-white/90'
+          }`}>
             Join us in supporting these critical initiatives that change lives every day.
           </p>
         </div>
@@ -60,13 +61,12 @@ export default function CausesSection() {
                   rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1
                   ${isStoryCard 
                     ? darkMode
-                      ? 'bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50'
+                      ? 'bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-500/50'
                       : 'bg-gradient-to-br from-orange-50 to-orange-50 border-2 border-orange-200'
                     : darkMode
-                      ? 'bg-gray-800'
+                      ? 'bg-white'
                       : 'bg-white'
                   }
-                  ${darkMode ? 'text-gray-100' : 'text-black'}
                   relative group
                 `}
               >
@@ -78,7 +78,7 @@ export default function CausesSection() {
                       <div className={`
                         absolute -inset-1 rounded-full blur opacity-75 animate-pulse 
                         ${darkMode 
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
+                          ? 'bg-gradient-to-r from-purple-400 to-pink-400' 
                           : 'bg-gradient-to-r from-orange-800 to-orange-600'
                         }
                       `}></div>
@@ -88,7 +88,7 @@ export default function CausesSection() {
                         relative text-white text-xs font-bold px-3 py-1 rounded-full 
                         animate-[flicker_2s_ease-in-out_infinite]
                         ${darkMode 
-                          ? 'bg-gradient-to-r from-purple-700 to-pink-700' 
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
                           : 'bg-gradient-to-r from-orange-800 to-orange-600'
                         }
                       `}>
@@ -108,7 +108,7 @@ export default function CausesSection() {
                   {/* Dark overlay for better text contrast */}
                   <div className={`
                     absolute inset-0 transition-opacity duration-300
-                    ${darkMode ? 'bg-black/30' : 'bg-transparent'}
+                    ${darkMode ? 'bg-black/10' : 'bg-transparent'}
                   `}></div>
                   
                   {isStoryCard && (
@@ -121,8 +121,8 @@ export default function CausesSection() {
                   <h3 className={`
                     text-xl font-semibold mb-2 transition-colors
                     ${isStoryCard 
-                      ? darkMode ? 'text-purple-300' : 'text-purple-800'
-                      : darkMode ? 'text-white' : ''
+                      ? darkMode ? 'text-purple-700' : 'text-purple-800'
+                      : darkMode ? 'text-blue-900' : 'text-gray-900'
                     }
                   `}>
                     {cause.title}
@@ -130,7 +130,7 @@ export default function CausesSection() {
                   
                   <p className={`
                     mb-6 transition-colors
-                    ${darkMode ? 'text-gray-300' : 'text-gray-700'}
+                    ${darkMode ? 'text-blue-900/70' : 'text-gray-700'}
                   `}>
                     {cause.description}
                   </p>
@@ -141,7 +141,7 @@ export default function CausesSection() {
                       {/* Glowing background */}
                       <div className={`
                         absolute -inset-1 rounded-lg blur opacity-60 animate-pulse
-                        bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600
+                        bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400
                       `}></div>
                       
                       <Link href={cause.storyPath || "/stories"}>
@@ -150,7 +150,7 @@ export default function CausesSection() {
                           className={`
                             relative w-full font-bold transition-all duration-300 hover:scale-[1.02]
                             ${darkMode 
-                              ? 'bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800' 
+                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700' 
                               : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                             }
                             text-white shadow-lg hover:shadow-xl border-0
@@ -177,7 +177,7 @@ export default function CausesSection() {
                         className={`
                           w-full transition-all duration-300 hover:scale-105 border-0
                           ${darkMode
-                            ? 'bg-orange-700 hover:bg-orange-800 text-white'
+                            ? 'bg-blue-900 hover:bg-blue-800 text-white'
                             : 'bg-orange-600 hover:bg-orange-700 text-white'
                           }
                         `}
@@ -191,24 +191,9 @@ export default function CausesSection() {
             );
           })}
         </div>
-
-        <div className="text-center">
-          <Link href="/projects">
-            <Button
-              variant="outline"
-              className={`
-                transition-all duration-300 cursor-pointer
-                ${darkMode
-                  ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-gray-500'
-                  : 'border-white text-white hover:bg-white hover:text-blue-600'
-                }
-              `}
-            >
-              View All Projects
-            </Button>
-          </Link>
         </div>
-      </div>
+
+
     </section>
   );
 }

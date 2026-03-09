@@ -9,7 +9,7 @@ import Partners from '../components/Partners';
 import Footer from '../components/Footer';
 import MeetTheFounders from '../components/MeetTheFounders';
 import CharitySectionTailwind from '../components/CharitySectionTailwind';
-import CausesSectionWrapper from "../components/CausesSectionWrapper";
+
 
 
 
@@ -23,7 +23,7 @@ export default function Home() {
       <HeroSection />
       <MissionSection />
       <CharitySectionTailwind />
-      <CausesSectionWrapper />
+      
       <CausesSection />
       <EventsSection />
       <MeetTheFounders />
