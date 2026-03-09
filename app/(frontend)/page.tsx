@@ -9,7 +9,7 @@ import Partners from '../components/Partners';
 import Footer from '../components/Footer';
 import MeetTheFounders from '../components/MeetTheFounders';
 import CharitySectionTailwind from '../components/CharitySectionTailwind';
-
+import WhatsAppButton from '../components/WhatsAppButton';
 
 
 
@@ -30,6 +30,7 @@ export default function Home() {
       <VolunteerSection />
       <Testimonials />
       <Partners />
+      <WhatsAppButton />
       
       
       
