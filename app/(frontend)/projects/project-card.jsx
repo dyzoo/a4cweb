@@ -41,7 +41,7 @@ export default function ProjectCard({ project }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         
         {/* Category Badge */}
-        <div className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold z-10">
+        <div className="absolute top-4 left-4 bg-blue-900 text-white px-4 py-1 rounded-full text-sm font-semibold z-10">
           {project?.category || 'Digital Education'}
         </div>
         
@@ -83,19 +83,19 @@ export default function ProjectCard({ project }) {
         <div className="mb-4">
           <div className="flex justify-between text-sm mb-1">
             <span className="text-gray-600">Funding Progress</span>
-            <span className="font-semibold text-blue-600">{project?.fundingProgress || 45}%</span>
+            <span className="font-semibold text-blue-900">{project?.fundingProgress || 5}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${project?.fundingProgress || 45}%` }}
+              className="bg-blue-900 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${project?.fundingProgress || 5}%` }}
             />
           </div>
         </div>
 
         {/* Action Button */}
         <Link href={`/projects/${projectSlug}`} className="block">
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group">
+          <button className="w-full bg-blue-900 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group">
             View Project Details
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
