@@ -47,7 +47,7 @@ const projectData = {
     duration: '30 Days',
     location: 'Dar es Salaam, Tanzania',
     budget: '$76,000',
-    completionRate: 75,
+    completionRate: 5,
     startDate: 'June 2024',
     endDate: 'December 2024',
     background: 'Many Tanzanian youth face financial barriers limiting access to technology education. Inspired by a founder who overcame similar challenges, EDUMISHA provides structured, hands-on exposure to digital skills, removing barriers to entry in the tech economy.',
@@ -152,7 +152,7 @@ const Accordion = ({ title, children, defaultOpen = false, index }) => {
         )}
       </button>
       {isOpen && (
-        <div className="p-5 bg-white text-gray-700 dark:text-gray-300">
+        <div className="p-5 bg-white text-gray-700 dark:text-gray-800">
           {children}
         </div>
       )}
@@ -444,41 +444,41 @@ export default function ProjectPage() {
             <div className="lg:col-span-2 space-y-6">
               {/* Overview Section */}
               <section className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2 dark:text-blue-900">
                   <BookOpen className="w-6 h-6 text-orange-600" />
                   Project Overview
                 </h2>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                <p className="text-gray-700 dark:text-gray-800 leading-relaxed mb-4 dark:text-blue-900">
                   {project.overview}
                 </p>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-800 leading-relaxed">
                   {project.fullDescription}
                 </p>
               </section>
 
               {/* Challenge & Solution */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
                 <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">The Challenge</h3>
-                  <p className="text-gray-700 dark:text-gray-300">{project.challenge}</p>
+                  <p className="text-gray-700 dark:text-gray-800 dark:text-blue-900">{project.challenge}</p>
                 </div>
                 <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">Our Solution</h3>
-                  <p className="text-gray-700 dark:text-gray-300">{project.solution}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 dark:text-blue-900">Our Solution</h3>
+                  <p className="text-gray-700 dark:text-gray-800 dark:text-blue-900">{project.solution}</p>
                 </div>
               </div>
 
               {/* Objectives */}
               <section className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Target className="w-6 h-6 text-orange-600" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2 dark:text-blue-900">
+                  <Target className="w-6 h-6 text-orange-600 dark:text-blue-900" />
                   Key Objectives
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.objectives.map((objective, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700 dark:text-gray-300">{objective}</span>
+                      <span className="text-gray-700 dark:text-gray-800">{objective}</span>
                     </div>
                   ))}
                 </div>
@@ -486,8 +486,8 @@ export default function ProjectPage() {
 
               {/* Accordions - First one open by default */}
               <Accordion title="Background & History" defaultOpen={true} index={0}>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">{project.background}</p>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-gray-700 dark:text-gray-900 mb-4">{project.background}</p>
+                <p className="text-gray-700 dark:text-gray-800">
                   The founders of Aid 4 Children Tanzania, including a professional graphic designer who personally overcame similar challenges, understand the transformative power of technology. This experience inspired the creation of the EDUMISHA Project.
                 </p>
               </Accordion>
@@ -499,7 +499,7 @@ export default function ProjectPage() {
                       <Heart className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                       <div>
                         <span className="font-semibold text-gray-900 capitalize">{key}: </span>
-                        <span className="text-gray-700 dark:text-gray-300">{value}</span>
+                        <span className="text-gray-700 dark:text-gray-800">{value}</span>
                       </div>
                     </div>
                   ))}
@@ -511,7 +511,7 @@ export default function ProjectPage() {
                   {project.faqs.map((faq, index) => (
                     <div key={index} className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
                       <h4 className="font-semibold text-gray-900 mb-2">{faq.question}</h4>
-                      <p className="text-gray-700 dark:text-gray-300">{faq.answer}</p>
+                      <p className="text-gray-700 dark:text-gray-800">{faq.answer}</p>
                     </div>
                   ))}
                 </div>
@@ -600,13 +600,13 @@ export default function ProjectPage() {
                     <h3 className="text-lg font-bold text-white">{module.module}</h3>
                   </div>
                   <div className="p-6">
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">{module.description}</p>
+                    <p className="text-gray-700 dark:text-gray-800 mb-4">{module.description}</p>
                     <p className="text-sm text-orange-600 font-semibold mb-3">Duration: {module.duration}</p>
                     <div className="space-y-2">
                       <p className="font-semibold text-gray-900">Topics covered:</p>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {module.topics.map((topic, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                          <li key={idx} className="flex items-center gap-2 text-gray-700 dark:text-gray-800">
                             <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                             {topic}
                           </li>
@@ -678,7 +678,7 @@ export default function ProjectPage() {
                       <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <CheckCircle className="w-4 h-4 text-orange-600" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300">{item}</span>
+                      <span className="text-gray-700 dark:text-gray-800">{item}</span>
                     </li>
                   ))}
                 </ul>
