@@ -1,42 +1,64 @@
+"use client";
+
+import { HandshakeIcon } from "lucide-react";
+import { useContent } from "./ContentProvider";
+import Reveal from "./Reveal";
+
 export default function Partners() {
-  // Partner data with logo paths pointing to the public folder
-  const Partners = [
-    { id: 1, name: "Alnoor Foundation", logo: "/Alnoor.png", url: "https://www.unicef.org" },
-    { id: 2, name: "Tanzania Government", logo: "/Coat Of Arm.png", url: "https://www.tanzania.go.tz/" },
-    { id: 3, name: "Africa Relief and Community Development", logo: "/ARCD.png", url: "https://africarelief.org/" },
-    { id: 4, name: "Naprint", logo: "/Naprint.png", url: "" },
-    { id: 5, name: "Save the Children Tanzania", logo: "/savethechildren.png", url: "https://www.savethechildren.net/tanzania" },
-    { id: 6, name: "Little Gidy", logo: "/LG Logo.png", url: "" },
-  ];
+  const { partners } = useContent();
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Trusted Partners</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Together with these organizations, we're creating lasting change for children in Tanzania.
+    <section className="border-t border-primary/5 bg-cream py-16 dark:border-white/10 dark:bg-primary-900 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <span className="section-eyebrow">{partners.eyebrow}</span>
+          <h2 className="heading-xl mt-4 text-2xl text-primary dark:text-white sm:text-3xl">
+            {partners.title}
+          </h2>
+          <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+            {partners.subtitle}
           </p>
+        </Reveal>
+
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {partners.items.map((partner, index) => {
+            const content = (
+              <div className="flex h-24 items-center justify-center rounded-xl border border-primary/10 bg-white px-4 grayscale transition-all duration-400 group-hover:-translate-y-1 group-hover:border-accent/30 group-hover:grayscale-0 group-hover:shadow-soft dark:border-white/10 dark:bg-primary-800">
+                <img
+                  src={partner.logo}
+                  alt={`${partner.name} logo`}
+                  className="max-h-14 w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            );
+
+            return (
+              <Reveal key={`${partner.name}-${index}`} delay={index * 60}>
+                {partner.url ? (
+                  <a
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={partner.name}
+                    className="group block"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <div className="group" title={partner.name}>
+                    {content}
+                  </div>
+                )}
+              </Reveal>
+            );
+          })}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          {Partners.map((partner) => (
-            <a
-              key={partner.id}
-              href={partner.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-              title={partner.name}
-            >
-              <img
-                src={partner.logo} // this pulls from public/partners/...
-                alt={`${partner.name} logo`}
-                className="h-24 w-full object-contain" // fixed height of 6rem
-              />
-            </a>
-          ))}
-        </div>
+        <Reveal className="mt-10 flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">
+          <HandshakeIcon className="h-4 w-4 text-accent-600" />
+          Stronger together
+        </Reveal>
       </div>
     </section>
   );

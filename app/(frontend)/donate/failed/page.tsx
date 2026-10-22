@@ -1,43 +1,71 @@
-// app/donation/failed/page.tsx
-'use client'
-import { XCircle } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+"use client";
 
-// Separated into its own component so Suspense can wrap it
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { ArrowLeft, HelpCircle, Home, XCircle } from "lucide-react";
+
 function DonationFailedContent() {
   const searchParams = useSearchParams();
-  const reference = searchParams.get('reference');
+  const reference = searchParams.get("reference");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div className="flex justify-center mb-6">
-          <XCircle className="w-20 h-20 text-red-600" />
-        </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Payment Failed</h1>
-        <p className="text-gray-600 mb-6">
-          We couldn&apos;t process your donation. Please try again or contact support.
-        </p>
-        {reference && (
-          <p className="text-sm text-gray-500 mb-8">
-            Reference: {reference}
+    <div className="flex min-h-[75vh] items-center justify-center bg-cream px-4 py-16 dark:bg-primary-900">
+      <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-card dark:border-white/10 dark:bg-primary-800">
+        <div className="bg-primary-900 px-8 py-8 text-center text-white">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/15 text-red-400">
+            <XCircle className="h-9 w-9" />
+          </span>
+          <h1 className="mt-5 font-display text-3xl font-bold">
+            Payment not completed
+          </h1>
+          <p className="mt-2 text-sm text-white/60">
+            No money has been deducted from your account.
           </p>
-        )}
-        <div className="space-y-3">
-          <Link
-            href="/donate"
-            className="block w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 transition"
-          >
-            Try Again
-          </Link>
-          <Link
-            href="/"
-            className="block w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition"
-          >
-            Return to Home
-          </Link>
+        </div>
+
+        <div className="px-8 py-7 text-center">
+          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            We could not process your donation. This can happen if the payment
+            was cancelled, the connection dropped or your provider declined the
+            transaction. Please try again.
+          </p>
+
+          {reference && (
+            <div className="mt-5 rounded-lg border border-primary/10 bg-cream/60 px-4 py-3 dark:border-white/10 dark:bg-primary-900">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                Reference
+              </p>
+              <p className="mt-0.5 break-all font-mono text-sm font-semibold text-primary dark:text-white">
+                {reference}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-6 space-y-3">
+            <Link
+              href="/donate"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-accent-600"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Try again
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary/20 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-primary"
+            >
+              <Home className="h-4 w-4" />
+              Return to home
+            </Link>
+          </div>
+
+          <p className="mt-6 flex items-center justify-center gap-1.5 border-t border-primary/10 pt-5 text-[11px] text-gray-400 dark:border-white/10 dark:text-gray-500">
+            <HelpCircle className="h-3.5 w-3.5" />
+            Still having trouble?{" "}
+            <Link href="/contact" className="font-semibold text-accent-600 hover:underline">
+              Contact support
+            </Link>
+          </p>
         </div>
       </div>
     </div>
@@ -46,11 +74,13 @@ function DonationFailedContent() {
 
 export default function DonationFailed() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[75vh] items-center justify-center bg-cream dark:bg-primary-900">
+          <span className="h-8 w-8 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
+        </div>
+      }
+    >
       <DonationFailedContent />
     </Suspense>
   );

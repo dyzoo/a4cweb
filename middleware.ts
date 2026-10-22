@@ -1,54 +1,70 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { verify } from 'jsonwebtoken'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verify } from "jsonwebtoken";
+import { ADMIN_COOKIE, JWT_SECRET } from "@/lib/jwt";
 
 interface JWTPayload {
-  userId: string
-  role: 'admin' | 'editor' | 'viewer'
-  email: string
+  userId: string;
+  role: "super_admin" | "admin" | "editor";
+  email: string;
+  name?: string;
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const token = request.cookies.get('admin_token')?.value
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get(ADMIN_COOKIE)?.value;
 
-  // ===== LOGIN PAGE =====
-  if (pathname === '/admin/login') {
-    if (token) {
-      try {
-        verify(token, process.env.JWT_SECRET as string)
-        return NextResponse.redirect(new URL('/admin', request.url))
-      } catch {
-        return NextResponse.next()
-      }
+  const isValid = () => {
+    if (!token) return false;
+    try {
+      verify(token, JWT_SECRET);
+      return true;
+    } catch {
+      return false;
     }
-    return NextResponse.next()
+  };
+
+  // APIs: return JSON instead of redirecting.
+  if (pathname.startsWith("/api/admin")) {
+    if (!isValid()) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized. Please sign in." },
+        { status: 401 }
+      );
+    }
+    return NextResponse.next();
   }
 
-  // ===== ADMIN PROTECTION =====
-  if (pathname.startsWith('/admin')) {
+  // Already signed in → skip login page.
+  if (pathname === "/admin/login") {
+    if (isValid()) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+    return NextResponse.next();
+  }
 
+  if (pathname.startsWith("/admin")) {
     if (!token) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
+      const url = new URL("/admin/login", request.url);
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
     }
 
     try {
-      verify(token, process.env.JWT_SECRET as string)
-      return NextResponse.next()
+      verify(token, JWT_SECRET);
+      return NextResponse.next();
     } catch {
       const response = NextResponse.redirect(
-        new URL('/admin/login', request.url)
-      )
-      response.cookies.delete('admin_token')
-      return response
+        new URL("/admin/login", request.url)
+      );
+      response.cookies.delete(ADMIN_COOKIE);
+      return response;
     }
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/admin/:path*',
-  ],
-}
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
+};

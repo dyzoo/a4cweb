@@ -1,165 +1,210 @@
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowUp,
+  ArrowUpRight,
+  Facebook,
+  Heart,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  Twitter,
+} from "lucide-react";
+import { useContent } from "./ContentProvider";
+
+const socials = [
+  { label: "Facebook", href: "https://facebook.com", Icon: Facebook },
+  { label: "Twitter", href: "https://twitter.com", Icon: Twitter },
+  {
+    label: "Instagram",
+    href: "https://instagram.com/aidforchildrentza",
+    Icon: Instagram,
+  },
+  { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+];
 
 export default function Footer() {
-  const quickLinks = [
-    { name: "Home", href: "/" },
-    { name: "Projects", href: "/projects" },
-    { name: "About Us", href: "/about" },
-    { name: "Donate", href: "/donate" },
-    { name: "Volunteer", href: "/BecomeVolunteer" },
-    { name: "Contact", href: "/contact" },
-  ];
+  const { site, footer } = useContent();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubscribed(true);
+    setName("");
+    setEmail("");
+    window.setTimeout(() => setSubscribed(false), 5000);
+  };
 
   return (
-    <footer className="bg-blue-950 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* Contact Form */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold">Stay Updated</h3>
-            <form className="space-y-4">
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Your Name"
-                  className="bg-blue-900 border-blue-800 text-white placeholder-blue-300"
-                  required
+    <footer className="relative overflow-hidden bg-primary-900 text-white">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-primary-400/10 blur-3xl"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* Brand */}
+          <div className="lg:col-span-4">
+            <Link href="/" className="group inline-flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
+                <Image
+                  src={site.logo}
+                  alt={`${site.name} logo`}
+                  width={38}
+                  height={38}
+                  className="h-9 w-9 object-contain"
                 />
-              </div>
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Your Email"
-                  className="bg-blue-900 border-blue-800 text-white placeholder-blue-300"
-                  required
-                />
-              </div>
-              <Button type="submit" variant="default" className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer">
-                Subscribe
-              </Button>
-            </form>
+              </span>
+              <span className="font-display text-xl font-bold">{site.name}</span>
+            </Link>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">
+              {footer.about}
+            </p>
+
+            <div className="mt-6 space-y-3 text-sm text-white/70">
+              <p className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-400" />
+                {site.address}
+              </p>
+              <a
+                href={`tel:${site.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-3 transition-colors hover:text-white"
+              >
+                <Phone className="h-4 w-4 text-accent-400" />
+                {site.phone}
+              </a>
+              <a
+                href={`mailto:${site.email}`}
+                className="flex items-center gap-3 transition-colors hover:text-white"
+              >
+                <Mail className="h-4 w-4 text-accent-400" />
+                {site.email}
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold">Quick Links</h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <a
+          {/* Quick links */}
+          <div className="lg:col-span-2">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+              {footer.quickLinksTitle}
+            </h3>
+            <ul className="mt-5 space-y-3">
+              {footer.links.map((link) => (
+                <li key={link.href}>
+                  <Link
                     href={link.href}
-                    className="text-blue-200 hover:text-white transition-colors"
+                    className="group inline-flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white"
                   >
-                    {link.name}
-                  </a>
+                    {link.label}
+                    <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Social Media */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold">Connect With Us</h3>
-            <div className="flex space-x-4">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-900 p-3 rounded-full hover:bg-blue-800 transition-colors"
-                aria-label="Facebook"
+          {/* Newsletter */}
+          <div className="lg:col-span-3">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+              {footer.newsletterTitle}
+            </h3>
+            <p className="mt-5 text-sm leading-relaxed text-white/65">
+              {footer.newsletterText}
+            </p>
+            <form onSubmit={handleSubscribe} className="mt-5 space-y-3">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                required
+                className="w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+                className="w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-600 hover:-translate-y-0.5"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+                <Send className="h-4 w-4" />
+                Subscribe
+              </button>
+              {subscribed && (
+                <p className="animate-fade-in text-xs font-medium text-emerald-300">
+                  Thank you for subscribing — welcome to the A4C family.
+                </p>
+              )}
+            </form>
+          </div>
+
+          {/* Social */}
+          <div className="lg:col-span-3">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+              {footer.connectTitle}
+            </h3>
+            <div className="mt-5 flex gap-3">
+              {socials.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:bg-accent hover:text-white"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-900 p-3 rounded-full hover:bg-blue-800 transition-colors"
-                aria-label="Twitter"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                </svg>
-              </a>
-              <a
-                href="https://instagram.com/aidforchildrentza"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-900 p-3 rounded-full hover:bg-blue-800 transition-colors"
-                aria-label="Instagram"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
             </div>
 
-            <div className="space-y-2">
-              <p className="flex items-center text-blue-200">
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                info@aid4children.org
-              </p>
-              <p className="flex items-center text-blue-200">
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                +255 769 999 902
-              </p>
-            </div>
+            <Link
+              href="/become-volunteer"
+              className="mt-6 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80 transition-colors hover:border-accent/50 hover:text-white"
+            >
+              <Heart className="h-4 w-4 text-accent-400" />
+              Join our volunteer network
+            </Link>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-12 pt-6 border-t border-blue-900 text-center text-blue-300">
-          <p>© {new Date().getFullYear()} Aid 4 Children Tanzania. All rights reserved.</p>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} {site.name}. {footer.rights}
+          </p>
+          <div className="flex items-center gap-5">
+            <Link href="/contact" className="transition-colors hover:text-white">
+              Contact
+            </Link>
+            <Link href="/about" className="transition-colors hover:text-white">
+              About
+            </Link>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              aria-label="Back to top"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 transition-all hover:-translate-y-0.5 hover:border-accent hover:text-white"
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

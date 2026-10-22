@@ -1,155 +1,139 @@
-// app/volunteer/page.tsx
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { 
-  UserIcon, 
-  PhoneIcon, 
-  EnvelopeIcon, 
-  CalendarIcon, 
-  MapPinIcon, 
-  DocumentArrowUpIcon,
-  CheckCircleIcon 
-} from '@heroicons/react/24/outline';
-import { useTheme } from "@/app/providers/ThemeProvider";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  CalendarDays,
+  CheckCircle2,
+  ChevronDown,
+  Mail,
+  MapPin,
+  Phone,
+  RefreshCw,
+  ShieldCheck,
+  UploadCloud,
+  User,
+} from "lucide-react";
+import { useContent } from "@/app/components/ContentProvider";
+import { Button } from "@/app/components/ui/button";
+
+const countryCodes = [
+  { code: "+255", country: "Tanzania" },
+  { code: "+254", country: "Kenya" },
+  { code: "+256", country: "Uganda" },
+  { code: "+250", country: "Rwanda" },
+  { code: "+257", country: "Burundi" },
+  { code: "+1", country: "USA / Canada" },
+  { code: "+44", country: "United Kingdom" },
+  { code: "+91", country: "India" },
+  { code: "+27", country: "South Africa" },
+  { code: "+234", country: "Nigeria" },
+];
+
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
+];
+
+const inputClass =
+  "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 dark:border-white/15 dark:bg-primary-900 dark:text-white dark:placeholder:text-gray-500";
 
 export default function VolunteerPage() {
-  const { darkMode } = useTheme();
+  const { volunteer } = useContent();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    countryCode: '+255',
-    email: '',
-    birthYear: '',
-    birthMonth: '',
-    birthDate: '',
-    location: '',
-    cv: null as File | null
+    firstName: "",
+    lastName: "",
+    phone: "",
+    countryCode: "+255",
+    email: "",
+    birthYear: "",
+    birthMonth: "",
+    birthDate: "",
+    location: "",
+    cv: null as File | null,
   });
-  
-  const [captchaText, setCaptchaText] = useState('');
-  const [userCaptcha, setUserCaptcha] = useState('');
+  const [captchaText, setCaptchaText] = useState("");
+  const [userCaptcha, setUserCaptcha] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Generate CAPTCHA on component mount
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-
   const generateCaptcha = () => {
-    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-    let result = '';
+    const characters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+    let result = "";
     for (let i = 0; i < 6; i++) {
       result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     setCaptchaText(result);
+    setUserCaptcha("");
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        return;
-      }
-      if (!file.type.includes('pdf') && !file.type.includes('document') && !file.name.toLowerCase().endsWith('.doc') && !file.name.toLowerCase().endsWith('.docx')) {
-        alert('Please upload a PDF or Word document');
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        return;
-      }
-      setFormData(prev => ({ ...prev, cv: file }));
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Your CV must be smaller than 5 MB.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
     }
+    const allowed =
+      file.type.includes("pdf") ||
+      file.type.includes("document") ||
+      /\.docx?$/i.test(file.name);
+    if (!allowed) {
+      toast.error("Please upload a PDF or Word document.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+    setFormData((prev) => ({ ...prev, cv: file }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (userCaptcha !== captchaText) {
-      alert('CAPTCHA verification failed.');
+      toast.error("The verification code does not match. Please try again.");
       generateCaptcha();
+      return;
+    }
+    if (!formData.cv) {
+      toast.error("Please attach your CV before submitting.");
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const data = new FormData();
-
-      data.append('firstName', formData.firstName);
-      data.append('lastName', formData.lastName);
-      data.append('phone', formData.phone);
-      data.append('countryCode', formData.countryCode);
-      data.append('email', formData.email);
-      data.append('birthYear', formData.birthYear);
-      data.append('birthMonth', formData.birthMonth);
-      data.append('birthDate', formData.birthDate);
-      data.append('location', formData.location);
-
-      if (formData.cv) {
-        data.append('cv', formData.cv);
-      }
-
-      const res = await fetch('/api/volunteer', {
-        method: 'POST',
-        body: data,
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null && key !== "cv") data.append(key, value as string);
       });
+      if (formData.cv) data.append("cv", formData.cv);
 
+      const res = await fetch("/api/volunteer", { method: "POST", body: data });
       const result = await res.json();
-
-      if (!res.ok) throw new Error(result.error || 'Submission failed');
+      if (!res.ok) throw new Error(result.error || "Submission failed");
 
       setIsSubmitted(true);
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Submission failed. Try again.');
+      toast.error(err.message || "Submission failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const countryCodes = [
-    { code: '+255', country: 'Tanzania' },
-    { code: '+254', country: 'Kenya' },
-    { code: '+256', country: 'Uganda' },
-    { code: '+250', country: 'Rwanda' },
-    { code: '+257', country: 'Burundi' },
-    { code: '+1', country: 'USA/Canada' },
-    { code: '+44', country: 'UK' },
-    { code: '+91', country: 'India' },
-    { code: '+27', country: 'South Africa' },
-    { code: '+234', country: 'Nigeria' }
-  ];
-
-  const months = [
-    { value: '1', name: 'January' },
-    { value: '2', name: 'February' },
-    { value: '3', name: 'March' },
-    { value: '4', name: 'April' },
-    { value: '5', name: 'May' },
-    { value: '6', name: 'June' },
-    { value: '7', name: 'July' },
-    { value: '8', name: 'August' },
-    { value: '9', name: 'September' },
-    { value: '10', name: 'October' },
-    { value: '11', name: 'November' },
-    { value: '12', name: 'December' }
-  ];
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 80 }, (_, i) => currentYear - 18 - i);
@@ -157,42 +141,25 @@ export default function VolunteerPage() {
 
   if (isSubmitted) {
     return (
-      <div className={`min-h-screen transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8 ${
-        darkMode 
-          ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
-          : 'bg-gradient-to-br from-blue-50 to-green-50'
-      }`}>
-        <div className="max-w-2xl mx-auto">
-          <div className={`rounded-2xl shadow-xl p-8 text-center transition-colors duration-300 ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            <CheckCircleIcon className={`h-16 w-16 mx-auto mb-6 ${
-              darkMode ? 'text-green-400' : 'text-green-500'
-            }`} />
-            
-            <h1 className={`text-3xl font-bold mb-4 ${
-              darkMode ? 'text-white' : 'text-gray-900'
-            }`}>
-              Hi {formData.firstName},
-            </h1>
-
-            <p className={`text-lg mb-6 ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              Thank you for your interest in volunteering with us. 
-              We have successfully received your application and our team will contact you within 3–5 business days.
-            </p>
-
-            <button
-              onClick={() => window.location.href = '/'}
-              className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
-                darkMode 
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-              }`}
-            >
-              Return to Home
-            </button>
+      <div className="flex min-h-[70vh] items-center justify-center bg-cream px-4 py-16 dark:bg-primary-900">
+        <div className="w-full max-w-xl rounded-2xl border border-primary/10 bg-white p-10 text-center shadow-card dark:border-white/10 dark:bg-primary-800">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+            <CheckCircle2 className="h-8 w-8" />
+          </span>
+          <h1 className="heading-xl mt-6 text-3xl text-primary dark:text-white">
+            Thank you, {formData.firstName || "friend"}!
+          </h1>
+          <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            We have received your volunteer application. Our team will review it
+            and contact you within 3–5 business days.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/">
+              <Button variant="default">Return home</Button>
+            </Link>
+            <Link href="/projects">
+              <Button variant="outline">Explore projects</Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -200,290 +167,188 @@ export default function VolunteerPage() {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
-        : 'bg-gradient-to-br from-blue-50 to-green-50'
-    }`}>
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className={`text-4xl font-bold mb-4 ${
-            darkMode ? 'text-white' : 'text-gray-900'
-          }`}>
-            Become a Volunteer
+    <div className="bg-cream dark:bg-primary-900">
+      <Toaster position="top-center" />
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-primary-900 py-20 text-white sm:py-24">
+        <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <span className="section-eyebrow !text-accent-400">{volunteer.eyebrow}</span>
+          <h1 className="heading-xl mx-auto mt-5 max-w-3xl text-4xl text-white sm:text-5xl">
+            {volunteer.title}
           </h1>
-          <p className={`text-xl max-w-2xl mx-auto ${
-            darkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Join our mission to create lasting change. Your time and skills can make a difference in children's lives across Tanzania.
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+            {volunteer.description}
           </p>
         </div>
+      </section>
 
-        {/* Form Card */}
-        <div className={`rounded-2xl shadow-xl p-8 transition-colors duration-300 ${
-          darkMode ? 'bg-gray-800' : 'bg-white'
-        }`}>
+      <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="rounded-2xl border border-primary/10 bg-white p-7 shadow-soft dark:border-white/10 dark:bg-primary-800 sm:p-10">
+          <div className="mb-8 flex items-center gap-3 border-b border-primary/10 pb-6 dark:border-white/10">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent-600">
+              <ShieldCheck className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="font-display text-xl font-bold text-primary dark:text-white">
+                Volunteer application
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                All fields marked * are required · about 5 minutes
+              </p>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="firstName" className={`block text-sm font-semibold mb-2 ${
-                  darkMode ? 'text-gray-200' : 'text-gray-700'
-                }`}>
-                  First Name *
-                </label>
-                <div className="relative">
-                  <UserIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    darkMode ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    required
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                    placeholder="Enter your first name"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className={`block text-sm font-semibold mb-2 ${
-                  darkMode ? 'text-gray-200' : 'text-gray-700'
-                }`}>
-                  Last Name *
-                </label>
-                <div className="relative">
-                  <UserIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    darkMode ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    required
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                    placeholder="Enter your last name"
-                  />
-                </div>
-              </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label="First name *" icon={<User className="h-4 w-4" />}>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  required
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your first name"
+                  className={`${inputClass} pl-10`}
+                />
+              </Field>
+              <Field label="Last name *" icon={<User className="h-4 w-4" />}>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  required
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your last name"
+                  className={`${inputClass} pl-10`}
+                />
+              </Field>
             </div>
 
-            {/* Phone Number */}
-            <div>
-              <label htmlFor="phone" className={`block text-sm font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Phone Number *
-              </label>
-              <div className="flex gap-3">
-                <div className="relative flex-1">
-                  <PhoneIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    darkMode ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
-                  <select
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className={`w-full pl-10 pr-8 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                  >
-                    {countryCodes.map(({ code, country }) => (
-                      <option key={code} value={code}>
-                        {code} ({country})
-                      </option>
-                    ))}
-                  </select>
-                  <div className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Phone number *
+                </label>
+                <div className="flex gap-2">
+                  <div className="relative w-32 shrink-0">
+                    <select
+                      name="countryCode"
+                      value={formData.countryCode}
+                      onChange={handleInputChange}
+                      className={`${inputClass} appearance-none pr-8`}
+                    >
+                      {countryCodes.map(({ code, country }) => (
+                        <option key={code} value={code}>
+                          {code} {country.split(" ")[0]}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  </div>
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Phone number"
+                      className={`${inputClass} pl-10`}
+                    />
                   </div>
                 </div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className={`flex-2 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                  placeholder="Phone number"
-                />
               </div>
-            </div>
 
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className={`block text-sm font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Email Address *
-              </label>
-              <div className="relative">
-                <EnvelopeIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                  darkMode ? 'text-gray-500' : 'text-gray-400'
-                }`} />
+              <Field label="Email address *" icon={<Mail className="h-4 w-4" />}>
                 <input
-                  type="email"
                   id="email"
                   name="email"
+                  type="email"
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                  placeholder="your.email@example.com"
+                  placeholder="you@example.com"
+                  className={`${inputClass} pl-10`}
                 />
-              </div>
+              </Field>
             </div>
 
-            {/* Date of Birth */}
             <div>
-              <label className={`block text-sm font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Date of Birth *
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Date of birth *
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid gap-3 sm:grid-cols-3">
                 <div className="relative">
-                  <CalendarIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 z-10 ${
-                    darkMode ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
+                  <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <select
                     name="birthYear"
                     required
                     value={formData.birthYear}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none relative z-0 ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
+                    className={`${inputClass} appearance-none pl-10`}
                   >
                     <option value="">Year</option>
-                    {years.map(year => (
+                    {years.map((year) => (
                       <option key={year} value={year}>{year}</option>
                     ))}
                   </select>
                 </div>
-
                 <select
                   name="birthMonth"
                   required
                   value={formData.birthMonth}
                   onChange={handleInputChange}
-                  className={`px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  className={`${inputClass} appearance-none`}
                 >
                   <option value="">Month</option>
-                  {months.map(month => (
-                    <option key={month.value} value={month.value}>{month.name}</option>
+                  {months.map((month, index) => (
+                    <option key={month} value={index + 1}>{month}</option>
                   ))}
                 </select>
-
                 <select
                   name="birthDate"
                   required
                   value={formData.birthDate}
                   onChange={handleInputChange}
-                  className={`px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  className={`${inputClass} appearance-none`}
                 >
-                  <option value="">Date</option>
-                  {dates.map(date => (
+                  <option value="">Day</option>
+                  {dates.map((date) => (
                     <option key={date} value={date}>{date}</option>
                   ))}
                 </select>
               </div>
             </div>
 
-            {/* Location */}
-            <div>
-              <label htmlFor="location" className={`block text-sm font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Current Location *
-              </label>
-              <div className="relative">
-                <MapPinIcon className={`h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                  darkMode ? 'text-gray-500' : 'text-gray-400'
-                }`} />
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                  placeholder="City, Country"
-                />
-              </div>
-            </div>
+            <Field label="Current location *" icon={<MapPin className="h-4 w-4" />}>
+              <input
+                id="location"
+                name="location"
+                required
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="City, Country"
+                className={`${inputClass} pl-10`}
+              />
+            </Field>
 
-            {/* CV Upload */}
             <div>
-              <label htmlFor="cv" className={`block text-sm font-semibold mb-2 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Upload CV (PDF, max 5MB) *
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Upload CV (PDF or Word, max 5 MB) *
               </label>
-              <div 
-                className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600' 
-                    : 'bg-white border-gray-300'
-                }`}
+              <div
                 onClick={() => fileInputRef.current?.click()}
+                className="cursor-pointer rounded-xl border-2 border-dashed border-gray-200 bg-cream/50 p-8 text-center transition-colors hover:border-accent hover:bg-accent/5 dark:border-white/15 dark:bg-primary-900"
               >
-                <DocumentArrowUpIcon className={`h-12 w-12 mx-auto mb-3 ${
-                  darkMode ? 'text-gray-500' : 'text-gray-400'
-                }`} />
-                <p className={`mb-2 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {formData.cv ? formData.cv.name : 'Click to upload your CV'}
+                <UploadCloud className="mx-auto h-10 w-10 text-accent-600" />
+                <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-200">
+                  {formData.cv ? formData.cv.name : "Click to upload your CV"}
                 </p>
-                <p className={`text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                  PDF, DOC, DOCX (Max 5MB)
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  PDF, DOC or DOCX · maximum 5 MB
                 </p>
                 <input
                   type="file"
@@ -492,94 +357,88 @@ export default function VolunteerPage() {
                   onChange={handleFileChange}
                   accept=".pdf,.doc,.docx"
                   className="hidden"
-                  required
                 />
               </div>
               {formData.cv && (
-                <p className={`text-sm mt-2 flex items-center ${
-                  darkMode ? 'text-green-400' : 'text-green-600'
-                }`}>
-                  <CheckCircleIcon className="h-4 w-4 mr-1" />
-                  File selected: {formData.cv.name} ({(formData.cv.size / 1024 / 1024).toFixed(2)} MB)
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                  {formData.cv.name} ({(formData.cv.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
               )}
             </div>
 
             {/* CAPTCHA */}
-            <div className={`p-6 rounded-lg ${
-              darkMode ? 'bg-gray-700/50' : 'bg-gray-50'
-            }`}>
-              <label htmlFor="captcha" className={`block text-sm font-semibold mb-4 ${
-                darkMode ? 'text-gray-200' : 'text-gray-700'
-              }`}>
-                Security Verification *
+            <div className="rounded-xl border border-primary/10 bg-cream/60 p-5 dark:border-white/10 dark:bg-primary-900">
+              <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Security verification *
               </label>
-              <div className="flex items-center gap-4">
-                <div className={`flex-1 p-4 rounded border-2 font-mono text-2xl text-center tracking-widest select-none ${
-                  darkMode 
-                    ? 'bg-gray-800 border-gray-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 select-none rounded-lg border border-primary/15 bg-white py-3 text-center font-mono text-xl tracking-[0.35em] text-primary line-through decoration-accent/40 decoration-2 dark:border-white/15 dark:bg-primary-800 dark:text-white">
                   {captchaText}
                 </div>
                 <button
                   type="button"
                   onClick={generateCaptcha}
-                  className={`px-4 py-2 text-sm font-semibold cursor-pointer ${
-                    darkMode 
-                      ? 'text-blue-400 hover:text-blue-300' 
-                      : 'text-blue-600 hover:text-blue-800'
-                  }`}
+                  aria-label="Refresh verification code"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-primary/15 text-primary transition-colors hover:border-accent hover:text-accent dark:border-white/15 dark:text-white"
                 >
-                  Refresh
+                  <RefreshCw className="h-4 w-4" />
                 </button>
               </div>
               <input
                 type="text"
-                id="captcha"
                 value={userCaptcha}
                 onChange={(e) => setUserCaptcha(e.target.value)}
-                className={`w-full mt-4 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                }`}
                 placeholder="Enter the code above"
                 required
+                className={`${inputClass} mt-3`}
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`
-                w-full bg-gradient-to-r text-white py-4 px-6 rounded-lg font-semibold text-lg 
-                transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
-                flex items-center justify-center transform hover:-translate-y-1 hover:scale-105 cursor-pointer
-                ${darkMode 
-                  ? 'from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600' 
-                  : 'from-blue-800 to-orange-600 hover:from-blue-900 hover:to-orange-700'
-                }
-              `}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-4 text-base font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Submitting...
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Submitting…
                 </>
               ) : (
-                'Submit Application'
+                "Submit application"
               )}
             </button>
 
-            <p className={`text-sm text-center ${
-              darkMode ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              By submitting this form, you agree to our privacy policy and terms of service.
+            <p className="text-center text-xs text-gray-500 dark:text-gray-400">
+              By submitting this form you agree to our privacy policy and terms of service.
             </p>
           </form>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        {label}
+      </label>
+      <div className="relative">
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          {icon}
+        </span>
+        {children}
       </div>
     </div>
   );

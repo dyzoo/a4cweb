@@ -1,88 +1,64 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowRight, Megaphone, X } from "lucide-react";
+import { useContent } from "./ContentProvider";
 
-export default function StickyMarquee() {
-  const [isVisible, setIsVisible] = useState(true);
+export default function ScrollingTicker() {
+  const { announcement } = useContent();
+  const [visible, setVisible] = useState(true);
 
-  const announcement =
-    "Urgent: School supplies needed for upcoming academic year - Your support can make a difference!";
-
-  if (!isVisible) return null;
+  if (!announcement.enabled || !visible) return null;
 
   return (
-    <div className="fixed top-16 left-0 w-full z-40 bg-gradient-to-r from-orange-700 to-orange-600">
-
-      {/* Progress bar */}
-      <div className="h-1 w-full bg-gray-200">
-        <div className="h-full bg-blue-700 animate-progress"></div>
+    <div className="relative z-30 overflow-hidden border-b border-accent-700/30 bg-primary text-white">
+      <div className="h-0.5 w-full bg-white/10">
+        <div className="h-full w-1/3 animate-progress-bar bg-accent" />
       </div>
+      <div className="mx-auto flex h-11 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+        <span className="hidden shrink-0 items-center gap-2 rounded-full bg-accent/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-accent-400 sm:flex">
+          <Megaphone className="h-3.5 w-3.5" />
+          {announcement.label}
+        </span>
 
-      {/* Main row — locked height */}
-      <div className="flex items-center justify-between px-3 h-10 overflow-hidden">
-        
-        {/* Live indicator */}
-        <div className="flex items-center">
-          <div className="w-2 h-2 bg-white rounded-full animate-ping mr-2"></div>
-          <span className="text-white text-xs font-bold uppercase tracking-wider">UPDATES</span>
-        </div>
-
-        {/* Scrolling text */}
-        <div className="flex-1 overflow-hidden mx-3">
-          <div className="animate-scroll whitespace-nowrap text-white text-sm font-medium flex">
-            <span className="px-4">{announcement}</span>
-            <span className="px-4">{announcement}</span>
+        <div className="relative flex-1 overflow-hidden">
+          <div className="flex w-max animate-scroll-x whitespace-nowrap">
+            <span className="flex items-center gap-6 pr-8 text-sm text-white/85">
+              {announcement.text}
+              {announcement.linkHref && (
+                <Link
+                  href={announcement.linkHref}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-accent-400 hover:text-accent-400/80"
+                >
+                  {announcement.linkLabel}
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              )}
+            </span>
+            <span
+              aria-hidden
+              className="flex items-center gap-6 pr-8 text-sm text-white/85"
+            >
+              {announcement.text}
+              {announcement.linkHref && (
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-accent-400">
+                  {announcement.linkLabel}
+                  <ArrowRight className="h-3 w-3" />
+                </span>
+              )}
+            </span>
           </div>
         </div>
 
-        {/* Close button */}
         <button
-          onClick={() => setIsVisible(false)}
-          className="text-white p-1 hover:bg-white/20 rounded-full transition"
+          onClick={() => setVisible(false)}
+          aria-label="Dismiss announcement"
+          className="shrink-0 rounded-full p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <X className="h-4 w-4" />
         </button>
       </div>
-
-      <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        @keyframes progress {
-          0% {
-            width: 0%;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-
-        .animate-scroll {
-          animation: scroll 35s linear infinite;
-        }
-
-        .animate-progress {
-          animation: progress 35s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }

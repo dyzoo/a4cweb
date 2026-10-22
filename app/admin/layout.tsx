@@ -1,20 +1,14 @@
-import Sidebar from "@/app/components/admin/Sidebar";
-import Header from "@/app/components/admin/Header";
+import AdminShell from "@/app/components/admin/AdminShell";
+import { getAdminSession } from "@/lib/auth";
 
-export default function AdminLayout({
+export const dynamic = "force-dynamic";
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      <Header />
-      <main className="ml-64 pt-16 p-6">
-        <div className="max-w-7xl mx-auto">
-          {children}
-        </div>
-      </main>
-    </div>
-  );
+  const user = await getAdminSession();
+
+  return <AdminShell user={user}>{children}</AdminShell>;
 }

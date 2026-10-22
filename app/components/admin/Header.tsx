@@ -1,54 +1,141 @@
 "use client";
 
-import { useState } from "react";
-import { Search, Bell, User, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronDown, ExternalLink, LogOut, Menu, User } from "lucide-react";
+import type { AdminSession } from "@/lib/auth";
 
-export default function Header() {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+const titles: Record<string, string> = {
+  "/admin": "Dashboard",
+  "/admin/content": "Site Content",
+  "/admin/projects": "Projects",
+  "/admin/volunteers": "Volunteer Applications",
+  "/admin/media": "Media & Brochure",
+  "/admin/users": "Admin Users",
+};
+
+const roleLabels: Record<string, string> = {
+  super_admin: "Super Administrator",
+  admin: "Administrator",
+  editor: "Editor",
+};
+
+export default function Header({
+  user,
+  onMenu,
+}: {
+  user: AdminSession | null;
+  onMenu: () => void;
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const title =
+    Object.entries(titles).find(([path]) =>
+      path === "/admin" ? pathname === path : pathname.startsWith(path)
+    )?.[1] || "Dashboard";
+
+  useEffect(() => {
+    const handler = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const signOut = async () => {
+    await fetch("/api/auth/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
+  };
 
   return (
-    <header className="fixed top-0 left-64 right-0 h-16 bg-white border-b border-gray-200 z-40">
-      <div className="flex items-center justify-between h-full px-6">
-        <div className="flex-1 max-w-2xl">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search in admin..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-            />
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onMenu}
+            className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 lg:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div>
+            <h1 className="font-display text-lg font-bold text-primary sm:text-xl">
+              {title}
+            </h1>
+            <p className="hidden text-xs text-slate-500 sm:block">
+              Manage your website content and applications
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button className="relative p-2 hover:bg-gray-100 rounded-full">
-            <Bell size={20} />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/"
+            target="_blank"
+            className="hidden items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:border-primary hover:text-primary sm:flex"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            View site
+          </Link>
 
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg"
+              onClick={() => setOpen((value) => !value)}
+              className="flex items-center gap-2 rounded-full border border-slate-200 p-1 pr-2 transition-colors hover:bg-slate-50"
             >
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                <User size={20} />
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-medium">Admin User</p>
-                <p className="text-xs text-gray-500">admin@example.com</p>
-              </div>
-              <ChevronDown size={16} />
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                {(user?.name || user?.email || "A").charAt(0).toUpperCase()}
+              </span>
+              <span className="hidden text-left md:block">
+                <span className="block max-w-[140px] truncate text-xs font-semibold text-primary">
+                  {user?.name || "Administrator"}
+                </span>
+                <span className="block text-[10px] text-slate-500">
+                  {roleLabels[user?.role || "admin"]}
+                </span>
+              </span>
+              <ChevronDown className="h-4 w-4 text-slate-400" />
             </button>
 
-            {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <div className="py-1">
-                  <a href="/admin/profile" className="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
-                  <a href="/admin/settings" className="block px-4 py-2 text-sm hover:bg-gray-100">Settings</a>
-                  <hr className="my-1" />
-                  <a href="/" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Exit Admin</a>
+            {open && (
+              <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
+                <div className="border-b border-slate-100 px-4 py-3">
+                  <p className="truncate text-sm font-semibold text-primary">
+                    {user?.name || "Administrator"}
+                  </p>
+                  <p className="truncate text-xs text-slate-500">{user?.email}</p>
                 </div>
+                <Link
+                  href="/admin/users"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  <User className="h-4 w-4" />
+                  Account settings
+                </Link>
+                <Link
+                  href="/"
+                  target="_blank"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Open website
+                </Link>
+                <button
+                  onClick={signOut}
+                  className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign out
+                </button>
               </div>
             )}
           </div>

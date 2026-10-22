@@ -1,0 +1,100 @@
+import { NextResponse } from "next/server";
+import mongoose from "mongoose";
+import { GridFSBucket, ObjectId } from "mongodb";
+import connectDB from "@/lib/mongodb";
+import { getAdminSession } from "@/lib/auth";
+
+const STATUSES = ["pending", "reviewing", "approved", "rejected"];
+
+async function getDB() {
+  await connectDB();
+  const db = mongoose.connection.db;
+  if (!db) throw new Error("Database connection is not ready");
+  return db;
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const { status } = await request.json();
+    if (!STATUSES.includes(status)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid status." },
+        { status: 400 }
+      );
+    }
+
+    const db = await getDB();
+    const result = await db
+      .collection("volunteer_applications")
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { status, updatedAt: new Date() } }
+      );
+
+    if (!result.matchedCount) {
+      return NextResponse.json(
+        { success: false, message: "Application not found." },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Unable to update application:", error);
+    return NextResponse.json(
+      { success: false, message: "Unable to update application." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const db = await getDB();
+    const collection = db.collection("volunteer_applications");
+    const application = await collection.findOne({ _id: new ObjectId(id) });
+
+    if (!application) {
+      return NextResponse.json(
+        { success: false, message: "Application not found." },
+        { status: 404 }
+      );
+    }
+
+    if (application.cvFileId) {
+      try {
+        const bucket = new GridFSBucket(db, { bucketName: "cvUploads" });
+        await bucket.delete(new ObjectId(application.cvFileId));
+      } catch (error) {
+        console.warn("Unable to delete CV file:", error);
+      }
+    }
+
+    await collection.deleteOne({ _id: new ObjectId(id) });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Unable to delete application:", error);
+    return NextResponse.json(
+      { success: false, message: "Unable to delete application." },
+      { status: 500 }
+    );
+  }
+}
