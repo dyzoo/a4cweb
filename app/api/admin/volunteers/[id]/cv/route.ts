@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { GridFSBucket, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import connectDB from "@/lib/mongodb";
 import { getAdminSession } from "@/lib/auth";
 
@@ -28,7 +28,7 @@ export async function GET(
       return new Response("No CV attached to this application", { status: 404 });
     }
 
-    const bucket = new GridFSBucket(db, { bucketName: "cvUploads" });
+    const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: "cvUploads" });
     const fileId = new ObjectId(application.cvFileId);
     const files = await bucket.find({ _id: fileId }).toArray();
     if (!files.length) return new Response("CV file not found", { status: 404 });
