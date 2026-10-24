@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
-import { GridFSBucket } from "mongodb";
 
 /**
  * Returns a GridFS bucket backed by the shared Mongoose connection.
  * The connection is opened lazily so importing this module never throws
  * when environment variables are not available yet (e.g. during builds).
  */
-export async function connectGridFS(): Promise<GridFSBucket> {
+export async function connectGridFS(): Promise<InstanceType<typeof mongoose.mongo.GridFSBucket>> {
   const uri = process.env.MONGODB_URI;
   const dbName = process.env.DATABASE_NAME;
 
@@ -19,7 +18,7 @@ export async function connectGridFS(): Promise<GridFSBucket> {
       bufferCommands: false,
       serverSelectionTimeoutMS: 5000,
       ...(dbName ? { dbName } : {}),
-    });
+    } as mongoose.ConnectOptions);
   }
 
   const db = mongoose.connection.db;
@@ -27,5 +26,5 @@ export async function connectGridFS(): Promise<GridFSBucket> {
     throw new Error("MongoDB connection is not ready");
   }
 
-  return new GridFSBucket(db, { bucketName: "uploads" });
+  return new mongoose.mongo.GridFSBucket(db, { bucketName: "uploads" });
 }
