@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' }); 
-import { connectGridFS } from "./lib/gridfs.js"; 
+import { connectGridFS } from "./lib/gridfs.js";
 
 (async () => {
   try {

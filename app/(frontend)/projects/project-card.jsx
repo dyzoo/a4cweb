@@ -41,25 +41,12 @@ export default function ProjectCard({ project }) {
             <span className="text-xs">Image not available</span>
           </div>
         )}
-<<<<<<< HEAD
         <div className="absolute inset-0 bg-gradient-to-t from-primary-900/70 via-primary-900/10 to-transparent" />
 
         <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur">
           {project?.category || 'Community'}
         </span>
         <span className="absolute right-4 top-4 rounded-full bg-emerald-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-=======
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-        
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4 bg-blue-900 text-white px-4 py-1 rounded-full text-sm font-semibold z-10">
-          {project?.category || 'Digital Education'}
-        </div>
-        
-        {/* Status Badge */}
-        <div className="absolute top-4 right-4 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-semibold z-10">
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
           {project?.status || 'Active'}
         </span>
 
@@ -91,7 +78,6 @@ export default function ProjectCard({ project }) {
           </span>
         </div>
 
-<<<<<<< HEAD
         <div className="mt-5">
           <div className="mb-1.5 flex items-center justify-between text-xs">
             <span className="text-gray-500 dark:text-gray-400">Funding progress</span>
@@ -101,43 +87,16 @@ export default function ProjectCard({ project }) {
             <div
               className="h-full rounded-full bg-gradient-to-r from-accent to-accent-400 transition-all duration-700"
               style={{ width: `${progress}%` }}
-=======
-        {/* Location */}
-        <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
-          <MapPin className="w-4 h-4 text-blue-600" />
-          <span>{project?.location || 'Dar es Salaam, Tanzania'}</span>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <div className="flex justify-between text-sm mb-1">
-            <span className="text-gray-600">Funding Progress</span>
-            <span className="font-semibold text-blue-900">{project?.fundingProgress || 5}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-blue-900 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${project?.fundingProgress || 5}%` }}
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
             />
           </div>
         </div>
 
-<<<<<<< HEAD
         <Link
           href={`/projects/${projectSlug}`}
           className="mt-6 inline-flex items-center justify-between rounded-full border border-primary/15 px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white dark:border-white/15 dark:text-white dark:hover:bg-white dark:hover:text-primary"
         >
           View project
           <ArrowUpRight className="h-4 w-4" />
-=======
-        {/* Action Button */}
-        <Link href={`/projects/${projectSlug}`} className="block">
-          <button className="w-full bg-blue-900 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group">
-            View Project Details
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
         </Link>
       </div>
     </article>

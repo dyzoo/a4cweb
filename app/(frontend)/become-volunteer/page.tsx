@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -84,8 +84,8 @@ export default function VolunteerPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Your CV must be smaller than 5 MB.");
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error("Your CV must be smaller than 4 MB.");
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
@@ -151,7 +151,7 @@ export default function VolunteerPage() {
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
             We have received your volunteer application. Our team will review it
-            and contact you within 3–5 business days.
+            and contact you within 3â€“5 business days.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/">
@@ -194,7 +194,7 @@ export default function VolunteerPage() {
                 Volunteer application
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                All fields marked * are required · about 5 minutes
+                All fields marked * are required Â· about 5 minutes
               </p>
             </div>
           </div>
@@ -348,7 +348,7 @@ export default function VolunteerPage() {
                   {formData.cv ? formData.cv.name : "Click to upload your CV"}
                 </p>
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  PDF, DOC or DOCX · maximum 5 MB
+                  PDF, DOC or DOCX Â· maximum 5 MB
                 </p>
                 <input
                   type="file"
@@ -403,7 +403,7 @@ export default function VolunteerPage() {
               {isSubmitting ? (
                 <>
                   <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                  Submitting…
+                  Submittingâ€¦
                 </>
               ) : (
                 "Submit application"

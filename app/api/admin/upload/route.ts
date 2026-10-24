@@ -1,7 +1,6 @@
-import { NextResponse } from "next/server";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
+﻿import { NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Media from "@/models/Media";
 import { getAdminSession } from "@/lib/auth";
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -34,25 +33,28 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 4 * 1024 * 1024) {
       return NextResponse.json(
-        { success: false, message: "Images must be smaller than 5 MB." },
+        { success: false, message: "Images must be smaller than 4 MB." },
         { status: 400 }
       );
     }
 
     const extension = EXTENSIONS[file.type] || "jpg";
-    const filename = `${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(
-      path.join(uploadDir, filename),
-      Buffer.from(await file.arrayBuffer())
-    );
+    const baseName = file.name.replace(/\.[^.]+$/, "");
+    const name = `${Date.now()}-${baseName}.${extension}`;
+
+    await connectDB();
+    const media = await Media.create({
+      name,
+      mimeType: file.type,
+      size: file.size,
+      data: Buffer.from(await file.arrayBuffer()),
+    });
 
     return NextResponse.json({
       success: true,
-      url: `/uploads/${filename}`,
+      url: `/api/media/${media._id.toString()}`,
     });
   } catch (error) {
     console.error("Unable to upload image:", error);

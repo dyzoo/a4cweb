@@ -1,41 +1,20 @@
 "use client";
 
-<<<<<<< HEAD
 import { Quote, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useContent } from "./ContentProvider";
 import Reveal from "./Reveal";
-=======
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { useTheme } from "@/app/providers/ThemeProvider";
-import ScrollAnimatedWrapper from "./ScrollAnimatedWrapper";
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
 
 export default function Testimonials() {
   const { testimonials } = useContent();
 
   return (
-<<<<<<< HEAD
     <section className="bg-white py-20 dark:bg-primary-900 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <span className="section-eyebrow">{testimonials.eyebrow}</span>
           <h2 className="heading-xl mt-5 text-3xl text-primary dark:text-white sm:text-4xl">
             {testimonials.title}
-=======
-    <section className={`
-      py-20 w-full transition-colors duration-300
-      ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}
-    `}>
-      <ScrollAnimatedWrapper>
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className={`
-            text-3xl md:text-4xl font-bold mb-4 transition-colors duration-300
-            ${darkMode ? 'text-white' : 'text-gray-900'}
-          `}>
-            Stories of Impact
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
           </h2>
           <p className="mt-5 text-base leading-relaxed text-gray-600 dark:text-gray-300">
             {testimonials.subtitle}
@@ -79,7 +58,6 @@ export default function Testimonials() {
           ))}
         </div>
       </div>
-      </ScrollAnimatedWrapper>
     </section>
   );
 }

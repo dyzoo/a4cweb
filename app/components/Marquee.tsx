@@ -9,14 +9,7 @@ export default function ScrollingTicker() {
   const { announcement } = useContent();
   const [visible, setVisible] = useState(true);
 
-<<<<<<< HEAD
   if (!announcement.enabled || !visible) return null;
-=======
-  const announcement =
-    "AID 4 CHILDREN TANZANIA wishes y'all a Happy Women's Day 08 March 2026";
-
-  if (!isVisible) return null;
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
 
   return (
     <div className="relative z-30 overflow-hidden border-b border-accent-700/30 bg-primary text-white">

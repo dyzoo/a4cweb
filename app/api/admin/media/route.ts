@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { readdir, stat, unlink } from "fs/promises";
-import path from "path";
+import { ObjectId } from "mongodb";
+import connectDB from "@/lib/mongodb";
+import Media from "@/models/Media";
 import { getAdminSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
-
-const IMAGE_TYPES = /\.(jpe?g|png|webp|gif)$/i;
 
 export async function GET() {
   const session = await getAdminSession();
@@ -14,31 +13,24 @@ export async function GET() {
   }
 
   try {
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    let files: string[] = [];
-    try {
-      files = await readdir(uploadDir);
-    } catch {
-      files = [];
-    }
+    await connectDB();
+    const images = await Media.find()
+      .select("name mimeType size uploadedAt")
+      .sort({ uploadedAt: -1 })
+      .lean();
 
-    const images = await Promise.all(
-      files
-        .filter((file) => IMAGE_TYPES.test(file))
-        .map(async (file) => {
-          const info = await stat(path.join(uploadDir, file));
-          return {
-            name: file,
-            url: `/uploads/${file}`,
-            size: info.size,
-            uploadedAt: info.mtime.toISOString(),
-          };
-        })
-    );
-
-    images.sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt));
-
-    return NextResponse.json({ success: true, images });
+    return NextResponse.json({
+      success: true,
+      images: images.map((image) => ({
+        _id: image._id.toString(),
+        name: image.name,
+        url: `/api/media/${image._id.toString()}`,
+        size: image.size,
+        uploadedAt: image.uploadedAt
+          ? new Date(image.uploadedAt).toISOString()
+          : null,
+      })),
+    });
   } catch (error) {
     console.error("Unable to list media:", error);
     return NextResponse.json(
@@ -56,17 +48,27 @@ export async function DELETE(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     const name = searchParams.get("name");
-    if (!name) {
+
+    if (!id && !name) {
       return NextResponse.json(
-        { success: false, message: "File name is required." },
+        { success: false, message: "File id or name is required." },
         { status: 400 }
       );
     }
 
-    const safeName = path.basename(name);
-    const filePath = path.join(process.cwd(), "public", "uploads", safeName);
-    await unlink(filePath);
+    await connectDB();
+
+    const filter = id && ObjectId.isValid(id) ? { _id: id } : { name };
+    const deleted = await Media.findOneAndDelete(filter);
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, message: "Image not found." },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

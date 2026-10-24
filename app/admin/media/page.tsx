@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -20,6 +20,7 @@ type Brochure = {
 };
 
 type MediaImage = {
+  _id: string;
   name: string;
   url: string;
   size: number;
@@ -33,7 +34,7 @@ function formatBytes(bytes: number) {
 }
 
 function formatDate(value?: string) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   return new Date(value).toLocaleDateString(undefined, {
     day: "numeric",
     month: "short",
@@ -81,8 +82,8 @@ export default function AdminMediaPage() {
       toast.error("Please upload a PDF file.");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("The brochure must be smaller than 10 MB.");
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error("The brochure must be smaller than 4 MB.");
       return;
     }
 
@@ -133,10 +134,10 @@ export default function AdminMediaPage() {
 
   const removeImage = async (image: MediaImage) => {
     if (!window.confirm(`Delete ${image.name}? This cannot be undone.`)) return;
-    setDeleting(image.name);
+    setDeleting(image._id);
     try {
       const response = await fetch(
-        `/api/admin/media?name=${encodeURIComponent(image.name)}`,
+        `/api/admin/media?id=${encodeURIComponent(image._id)}`,
         { method: "DELETE" }
       );
       const result = await response.json();
@@ -144,7 +145,7 @@ export default function AdminMediaPage() {
         throw new Error(result.message || "Unable to delete image.");
       }
       setImages((previous) =>
-        previous.filter((item) => item.name !== image.name)
+        previous.filter((item) => item._id !== image._id)
       );
       toast.success("Image deleted");
     } catch (error: any) {
@@ -193,7 +194,7 @@ export default function AdminMediaPage() {
                     {brochure.name}
                   </p>
                   <p className="mt-0.5 text-xs text-slate-400">
-                    {formatBytes(brochure.size)} · uploaded{" "}
+                    {formatBytes(brochure.size)} Â· uploaded{" "}
                     {formatDate(brochure.uploadedAt)}
                   </p>
                 </div>
@@ -247,10 +248,10 @@ export default function AdminMediaPage() {
               <UploadCloud className="mx-auto h-7 w-7 text-accent" />
             )}
             <p className="mt-2 text-sm font-medium text-slate-700">
-              {uploading ? "Uploading…" : "Upload a new brochure"}
+              {uploading ? "Uploadingâ€¦" : "Upload a new brochure"}
             </p>
             <p className="mt-1 text-xs text-slate-400">
-              PDF only · maximum 10 MB · replaces the current file
+              PDF only Â· maximum 4 MB Â· replaces the current file
             </p>
             <input
               ref={inputRef}
@@ -297,7 +298,7 @@ export default function AdminMediaPage() {
             <div className="mt-5 grid max-h-[340px] grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3">
               {images.map((image) => (
                 <div
-                  key={image.name}
+                  key={image._id}
                   className="group relative overflow-hidden rounded-lg border border-slate-200"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -321,11 +322,11 @@ export default function AdminMediaPage() {
                     <button
                       type="button"
                       onClick={() => removeImage(image)}
-                      disabled={deleting === image.name}
+                      disabled={deleting === image._id}
                       className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500 disabled:opacity-50"
                       aria-label="Delete image"
                     >
-                      {deleting === image.name ? (
+                      {deleting === image._id ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       ) : (
                         <Trash2 className="h-3.5 w-3.5" />

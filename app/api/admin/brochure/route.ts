@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Brochure from "@/models/Brochure";
 import { getAdminSession } from "@/lib/auth";
@@ -42,9 +42,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 4 * 1024 * 1024) {
       return NextResponse.json(
-        { success: false, message: "The brochure must be smaller than 10 MB." },
+        { success: false, message: "The brochure must be smaller than 4 MB." },
         { status: 400 }
       );
     }

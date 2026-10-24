@@ -4,24 +4,23 @@ import { MongoClient, GridFSBucket } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("MONGODB_URI is not defined in environment variables");
-}
-
 const COLLECTION_NAME = 'volunteer_applications';
 
 let cachedClient: MongoClient | null = null;
 
 async function connectToDatabase() {
-  if (cachedClient) return cachedClient.db(); // no argument
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not defined in environment variables");
+  }
 
-  const client = new MongoClient(process.env.MONGODB_URI!);
-  await client.connect();
-  cachedClient = client;
+  if (!cachedClient) {
+    const client = new MongoClient(uri);
+    await client.connect();
+    cachedClient = client;
+  }
 
-  return client.db(); // no DATABASE_NAME
+  return cachedClient.db(process.env.DATABASE_NAME || undefined);
 }
 
 
@@ -54,10 +53,19 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(bytes);
 
       const uploadStream = bucket.openUploadStream(
-        `${Date.now()}-${uuidv4()}-${cvFile.name}`
+        `${Date.now()}-${uuidv4()}-${cvFile.name}`,
+        {
+          metadata: {
+            contentType: cvFile.type || "application/octet-stream",
+          },
+        }
       );
 
-      uploadStream.end(buffer);
+      await new Promise<void>((resolve, reject) => {
+        uploadStream.once("finish", () => resolve());
+        uploadStream.once("error", reject);
+        uploadStream.end(buffer);
+      });
 
       fileId = uploadStream.id;
     }

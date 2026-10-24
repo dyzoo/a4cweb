@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verify } from "jsonwebtoken";
 import { ADMIN_COOKIE, JWT_SECRET } from "@/lib/jwt";
@@ -10,7 +10,7 @@ interface JWTPayload {
   name?: string;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(ADMIN_COOKIE)?.value;
 
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Already signed in → skip login page.
+  // Already signed in â†’ skip login page.
   if (pathname === "/admin/login") {
     if (isValid()) {
       return NextResponse.redirect(new URL("/admin", request.url));

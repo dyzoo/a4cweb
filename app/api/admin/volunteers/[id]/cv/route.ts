@@ -42,6 +42,7 @@ export async function GET(
     const filename = files[0].filename || "cv.pdf";
     const contentType =
       (files[0] as { contentType?: string }).contentType ||
+      (files[0].metadata?.contentType as string | undefined) ||
       "application/octet-stream";
 
     return new Response(buffer, {

@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 "use client";
-=======
-'use client'
-import React, { useState } from 'react';
-import Image from 'next/image';
-import ScrollAnimatedWrapper from '@/app/components/ScrollAnimatedWrapper';
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
 
 import { useState } from "react";
 import Image from "next/image";
@@ -53,7 +46,6 @@ export default function AboutUs() {
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/70">
               {about.heroSubtitle}
             </p>
-<<<<<<< HEAD
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/donate">
                 <Button variant="accent">
@@ -68,42 +60,11 @@ export default function AboutUs() {
                   Talk to our team
                 </Button>
               </Link>
-=======
-          </div>
-        </div>
-      </section>
-
-      {/* Our Story Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <ScrollAnimatedWrapper>
-        <div className="max-w-7xl mx-auto">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-            <div className="mb-12 lg:mb-0">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-              <p className="text-lg text-gray-600 mb-6">
-                Aid 4 Children Tanzania was founded in 2024 by two friends who shared a simple yet powerful belief that every child deserves the chance to learn, grow, and dream, no matter where they are born.
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                The idea took shape during a visit to a remote village, where they met Asha, a young girl who walked several miles barefoot each day just to borrow old books from a nearby school. Despite the challenges, her determination to learn never faded.
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                That encounter changed everything. Inspired by Asha&apos;s courage and resilience, they decided to turn compassion into action and Aid 4 Children Tanzania was born.
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                Since then, the organization has worked to reach more children like Asha by creating opportunities for education, access to essential resources, and a foundation for a brighter future.
-              </p>
-              <p className="text-lg text-gray-600 mb-6">
-                Every project, every book, and every smile shared is guided by that same belief:
-                When we give a child a chance, we give a community hope.
-              </p>
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
             </div>
           </Reveal>
         </div>
-         </ScrollAnimatedWrapper>
       </section>
 
-<<<<<<< HEAD
       {/* Story */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -146,21 +107,6 @@ export default function AboutUs() {
                   <p className="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     Turning compassion into action
                   </p>
-=======
-      {/* Mission and Vision Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-         <ScrollAnimatedWrapper>
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12">
-            {missionVision.map((item, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-6">{item.icon}</div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  </div>
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
                 </div>
               </div>
             </Reveal>
@@ -189,10 +135,8 @@ export default function AboutUs() {
             ))}
           </div>
         </div>
-         </ScrollAnimatedWrapper>
       </section>
 
-<<<<<<< HEAD
       {/* Impact initiatives */}
       <section className="bg-primary-900 py-20 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -203,16 +147,6 @@ export default function AboutUs() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               {about.impactSubtitle}
-=======
-      {/* Impact Stories Section - Replaced Our Impact */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-900 to-blue-950">
-         <ScrollAnimatedWrapper>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Our Impact Initiatives</h2>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Exploring our comprehensive programs that create lasting change in communities
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
             </p>
           </Reveal>
 
@@ -237,7 +171,6 @@ export default function AboutUs() {
             ))}
           </Reveal>
 
-<<<<<<< HEAD
           <AnimatePresence mode="wait">
             <motion.div
               key={activeStory}
@@ -249,99 +182,6 @@ export default function AboutUs() {
             >
               <div className="grid lg:grid-cols-2">
                 <div className="relative min-h-[280px] lg:min-h-[420px]">
-=======
-          {/* Active Story Display */}
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl">
-            <div className="lg:grid lg:grid-cols-2 lg:gap-0">
-              <div className="relative h-80 lg:h-full">
-                <Image
-                  src={impactStories[activeStory].image}
-                  alt={impactStories[activeStory].title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-700 hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden" />
-                <div className="absolute bottom-6 left-6 lg:hidden">
-                  <div className="flex items-center space-x-3 text-white">
-                    <div className="p-2 bg-orange-600 rounded-lg">
-                      {impactStories[activeStory].icon}
-                    </div>
-                    <h3 className="text-2xl font-bold">{impactStories[activeStory].title}</h3>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="p-8 lg:p-12">
-                <div className="hidden lg:flex items-center space-x-4 mb-6">
-                  <div className="p-3 bg-gradient-to-r from-orange-600 to-orange-800 rounded-xl text-white">
-                    {impactStories[activeStory].icon}
-                  </div>
-                  <h3 className="text-3xl font-bold text-gray-900">{impactStories[activeStory].title}</h3>
-                </div>
-                
-                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  {impactStories[activeStory].description}
-                </p>
-                
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 text-lg border-l-4 border-orange-600 pl-3">Key Achievements:</h4>
-                  {impactStories[activeStory].achievements.map((achievement, idx) => (
-                    <div key={idx} className="flex items-center space-x-4 group">
-                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-orange-600 to-orange-800 transform group-hover:scale-150 transition-transform duration-300"></div>
-                      <span className="text-gray-600 group-hover:text-gray-900 transition-colors duration-300">{achievement}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <div className="flex items-center space-x-3 text-sm text-gray-500">
-                    <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    <span>Each initiative represents our commitment to sustainable community development</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Story Progress Dots */}
-          <div className="flex justify-center space-x-3 mt-8">
-            {impactStories.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveStory(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeStory === index
-                    ? 'bg-orange-500 scale-125 shadow-lg'
-                    : 'bg-white/40 hover:bg-white/60 hover:scale-110'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-         </ScrollAnimatedWrapper>
-      </section>
-
-      {/* Meet the Founders Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
-         <ScrollAnimatedWrapper>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Meet the Founders</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The visionary leadership behind our organization's success
-            </p>
-          </div>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8 lg:gap-12">
-            {founders.map((founder) => (
-              <div
-                key={founder.id}
-                className="w-full md:w-[400px] group relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3"
-              >
-                <div className="relative h-80 overflow-hidden cursor-pointer">
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
                   <Image
                     src={current.image}
                     alt={current.title}
@@ -383,10 +223,8 @@ export default function AboutUs() {
             </motion.div>
           </AnimatePresence>
         </div>
-          </ScrollAnimatedWrapper>
       </section>
 
-<<<<<<< HEAD
       <MeetTheFounders />
 
       {/* CTA */}
@@ -400,15 +238,6 @@ export default function AboutUs() {
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
             {about.ctaText}
-=======
-      {/* Call to Action Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-         <ScrollAnimatedWrapper>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Join Our Mission</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Whether you want to volunteer, donate, or partner with us, there are numerous ways to get involved and create meaningful impact in children's lives.
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/donate">
@@ -423,12 +252,7 @@ export default function AboutUs() {
               </Button>
             </Link>
           </div>
-<<<<<<< HEAD
         </Reveal>
-=======
-        </div>
-        </ScrollAnimatedWrapper>
->>>>>>> 2cbd8cefdb585adf0cd21d003b55ef1454f6e062
       </section>
     </div>
   );
