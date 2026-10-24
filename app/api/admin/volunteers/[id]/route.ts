@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { GridFSBucket, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import connectDB from "@/lib/mongodb";
 import { getAdminSession } from "@/lib/auth";
 
@@ -81,7 +81,7 @@ export async function DELETE(
 
     if (application.cvFileId) {
       try {
-        const bucket = new GridFSBucket(db, { bucketName: "cvUploads" });
+        const bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: "cvUploads" });
         await bucket.delete(new ObjectId(application.cvFileId));
       } catch (error) {
         console.warn("Unable to delete CV file:", error);
