@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     let fileId = null;
 
     if (cvFile) {
-      const bucket = new GridFSBucket(db, {
+      const bucket = new GridFSBucket(db as any, {
         bucketName: 'cvUploads',
       });
 
