@@ -4,7 +4,8 @@ import Project from "@/models/project";
 import { getAdminSession } from "@/lib/auth";
 
 function makeSlug(value: string) {
-  return value
+  if (!value) return "";
+  return String(value)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
@@ -70,15 +71,18 @@ export async function PATCH(
 
     if (updates.title) updates.title = String(updates.title).trim();
     if (updates.slug || updates.title) {
-      const slug = makeSlug(String(updates.slug || updates.title));
-      const duplicate = await Project.findOne({ slug, _id: { $ne: id } });
-      if (duplicate) {
-        return NextResponse.json(
-          { success: false, message: "A project with this slug already exists." },
-          { status: 409 }
-        );
+      const slugSource = updates.slug || updates.title;
+      const slug = makeSlug(String(slugSource));
+      if (slug) {
+        const duplicate = await Project.findOne({ slug, _id: { $ne: id } });
+        if (duplicate) {
+          return NextResponse.json(
+            { success: false, message: "A project with this slug already exists." },
+            { status: 409 }
+          );
+        }
+        updates.slug = slug;
       }
-      updates.slug = slug;
     }
 
     Object.assign(project, updates);
