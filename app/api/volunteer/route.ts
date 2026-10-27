@@ -1,9 +1,7 @@
 ﻿// app/api/volunteer/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
-import mongoose from 'mongoose';
+import { GridFSBucket, MongoClient } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
-
 
 const COLLECTION_NAME = 'volunteer_applications';
 
@@ -46,7 +44,7 @@ export async function POST(request: NextRequest) {
     let fileId = null;
 
     if (cvFile) {
-      const bucket = new mongoose.mongo.GridFSBucket(db, {
+      const bucket = new GridFSBucket(db, {
         bucketName: 'cvUploads',
       });
 
