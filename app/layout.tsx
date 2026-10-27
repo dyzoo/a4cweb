@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Aid4Children | Aid, Hope, Future",
   description: defaultContent.seo.description,
-  icons: { icon: "/A4C logo2.png" },
+  icons: { icon: "/A4C logo2.png", shortcut: "/A4C logo2.png", apple: "/A4C logo2.png" },
 };
 
 export default function RootLayout({

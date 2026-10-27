@@ -9,7 +9,7 @@ import {
   Heart,
   PlayCircle,
   ShieldCheck,
-  Sparkles,
+  Star,
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useTheme } from "@/app/providers/ThemeProvider";
@@ -108,7 +108,7 @@ export default function HeroSection() {
               transition={{ duration: 0.6 }}
               className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur-sm"
             >
-              <Sparkles className="h-3.5 w-3.5 text-accent-400" />
+              <Star className="h-3.5 w-3.5 text-accent-400" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/80">
                 {hero.eyebrow}
               </span>

@@ -9,7 +9,7 @@ import {
   Check,
   HandHeart,
   HeartHandshake,
-  Sparkles,
+  Star,
   Zap,
 } from "lucide-react";
 import { useContent } from "@/app/components/ContentProvider";
@@ -98,7 +98,7 @@ export default function AboutUs() {
               </div>
               <div className="absolute -bottom-6 -left-4 flex items-center gap-3 rounded-xl bg-white p-4 shadow-card dark:bg-primary-800 sm:left-6">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent-600">
-                  <Sparkles className="h-5 w-5" />
+                  <Star className="h-5 w-5" />
                 </span>
                 <div>
                   <p className="font-display text-lg font-bold text-primary dark:text-white">

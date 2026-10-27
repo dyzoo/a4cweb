@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ShieldCheck, Star } from "lucide-react";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white py-3 pl-11 pr-11 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/10";
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
 
         <div className="relative max-w-md">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-300">
-            <Sparkles className="h-3 w-3" />
+            <Star className="h-3 w-3" />
             Content management
           </span>
           <h2 className="mt-5 font-display text-4xl font-bold leading-tight">

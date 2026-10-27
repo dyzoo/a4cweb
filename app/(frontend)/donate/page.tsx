@@ -9,7 +9,7 @@ import {
   Lock,
   ShieldCheck,
   Smartphone,
-  Sparkles,
+  Star,
   Users,
 } from "lucide-react";
 import Icon from "@/app/components/Icon";
@@ -120,7 +120,7 @@ export default function DonationPage() {
         />
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <span className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
-            <Sparkles className="h-3.5 w-3.5 text-accent-400" /> Secure giving
+            <Star className="h-3.5 w-3.5 text-accent-400" /> Secure giving
           </span>
           <h1 className="heading-xl mx-auto mt-5 max-w-3xl text-4xl text-white sm:text-5xl">
             {donate.title}
