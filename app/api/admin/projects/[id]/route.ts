@@ -32,10 +32,45 @@ export async function PATCH(
       );
     }
 
-    const updates: Record<string, unknown> = { ...body };
-    if (body.title) updates.title = String(body.title).trim();
-    if (body.slug || body.title) {
-      const slug = makeSlug(body.slug || body.title);
+    const updates: Record<string, unknown> = {};
+
+    const allowedFields = [
+      "title",
+      "subtitle",
+      "slug",
+      "category",
+      "status",
+      "description",
+      "longDescription",
+      "overview",
+      "background",
+      "image",
+      "imageUrl",
+      "location",
+      "duration",
+      "beneficiaries",
+      "ageRange",
+      "fundingProgress",
+      "objectives",
+      "curriculum",
+      "impact",
+      "supportServices",
+      "featured",
+      "published",
+      "technologies",
+      "githubUrl",
+      "liveUrl",
+    ];
+
+    for (const field of allowedFields) {
+      if (field in body) {
+        updates[field] = (body as any)[field];
+      }
+    }
+
+    if (updates.title) updates.title = String(updates.title).trim();
+    if (updates.slug || updates.title) {
+      const slug = makeSlug(String(updates.slug || updates.title));
       const duplicate = await Project.findOne({ slug, _id: { $ne: id } });
       if (duplicate) {
         return NextResponse.json(
@@ -48,7 +83,7 @@ export async function PATCH(
 
     Object.assign(project, updates);
     project.updatedAt = new Date();
-    await project.save();
+    await project.save({ validateBeforeSave: false });
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
