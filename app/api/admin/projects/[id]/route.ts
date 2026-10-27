@@ -86,7 +86,8 @@ export async function PATCH(
     }
 
     Object.assign(project, updates);
-    project.updatedAt = new Date();
+    if (!project.updatedAt) project.updatedAt = new Date();
+    project.set('updatedAt', new Date());
     await project.save({ validateBeforeSave: false });
 
     return NextResponse.json({ success: true, project });
