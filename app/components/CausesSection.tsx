@@ -49,15 +49,14 @@ export default function CausesSection() {
                         : "bg-white/90 text-primary"
                     }`}
                   >
-                    {cause.featured && <Award className="h-3 w-3" />}
                     {cause.badge}
                   </span>
-                  <span className="absolute -bottom-6 right-5 flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform duration-500 group-hover:rotate-12">
+                  <span className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform duration-500 group-hover:scale-105">
                     <Icon name={cause.icon} className="h-5 w-5" />
                   </span>
                 </div>
 
-                <div className="flex flex-1 flex-col p-6 pt-8">
+                <div className="flex flex-1 flex-col p-6">
                   <h3 className="font-display text-xl font-bold text-white">
                     {cause.title}
                   </h3>
