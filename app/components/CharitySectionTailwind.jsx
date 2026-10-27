@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Heart, Quote, ShieldCheck, Sparkles } from 'lucide-react';
+import { Heart, Quote, ShieldCheck, Star } from 'lucide-react';
 import { useContent } from './ContentProvider';
 import Reveal from './Reveal';
 
@@ -50,7 +50,7 @@ export default function ChildStorySection() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
-                    <Sparkles className="h-5 w-5 text-accent-400" />
+                    <Star className="h-5 w-5 text-accent-400" />
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-bold text-primary dark:text-white">

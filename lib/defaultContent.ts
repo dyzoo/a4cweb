@@ -220,7 +220,7 @@ export const defaultContent: SiteContent = {
   site: {
     name: "Aid 4 Children Tanzania",
     shortName: "A4C Tanzania",
-    tagline: "Hope, education and dignity for every child",
+    tagline: "Aid, Hope, Future",
     description:
       "A Tanzanian non-profit empowering children in difficult circumstances through education, healthcare and community support.",
     email: "info@aid4childrentz.org",

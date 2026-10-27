@@ -59,13 +59,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-4">
             <Link href="/" className="group inline-flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
+              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
                 <Image
-                  src={site.logo}
+                  src="/A4C logo2.png"
                   alt={`${site.name} logo`}
-                  width={38}
-                  height={38}
-                  className="h-9 w-9 object-contain"
+                  width={44}
+                  height={44}
+                  className="h-12 w-12 object-contain"
                 />
               </span>
               <span className="font-display text-xl font-bold">{site.name}</span>

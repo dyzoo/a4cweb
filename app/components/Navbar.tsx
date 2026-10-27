@@ -76,14 +76,14 @@ export default function Navbar() {
       >
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="group flex items-center gap-3">
-            <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-primary-50 ring-1 ring-primary/10 transition-transform duration-300 group-hover:scale-105 dark:bg-white/10 dark:ring-white/10">
+            <span className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-primary-50 ring-1 ring-primary/10 transition-transform duration-300 group-hover:scale-105 dark:bg-white/10 dark:ring-white/10">
               <Image
-                src={site.logo}
+                src="/A4C logo2.png"
                 alt={`${site.name} logo`}
-                width={40}
-                height={40}
+                width={48}
+                height={48}
                 priority
-                className="h-9 w-9 object-contain"
+                className="h-12 w-12 object-contain"
               />
             </span>
             <span className="flex flex-col leading-tight">
@@ -91,7 +91,7 @@ export default function Navbar() {
                 {site.name}
               </span>
               <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-600 sm:block">
-                Hope • Education • Dignity
+                Aid • Hope • Future
               </span>
             </span>
           </Link>

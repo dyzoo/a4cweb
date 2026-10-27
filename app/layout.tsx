@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: defaultContent.seo.title,
+  title: "Aid4Children | Aid, Hope, Future",
   description: defaultContent.seo.description,
   icons: { icon: "/A4C logo2.png" },
 };
