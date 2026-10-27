@@ -86,10 +86,10 @@ export async function PATCH(
     await project.save({ validateBeforeSave: false });
 
     return NextResponse.json({ success: true, project });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Unable to update project:", error);
     return NextResponse.json(
-      { success: false, message: "Unable to update project." },
+      { success: false, message: error?.message || "Unable to update project." },
       { status: 500 }
     );
   }
