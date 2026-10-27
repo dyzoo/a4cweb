@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Project from "@/models/project";
+import Project from "@/models/project.js";
 import { getAdminSession } from "@/lib/auth";
 
 function makeSlug(value: string) {
