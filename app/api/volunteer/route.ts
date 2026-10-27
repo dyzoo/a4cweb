@@ -1,4 +1,4 @@
-// app/api/volunteer/route.ts
+﻿// app/api/volunteer/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const collection = db.collection(COLLECTION_NAME);
 
     /* =========================
-       ✅ FILE UPLOAD TO GRIDFS
+       âœ… FILE UPLOAD TO GRIDFS
     ========================= */
     const cvFile = data.get('cv') as File | null;
     let fileId = null;
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     }
 
     /* =========================
-       ✅ FORM DATA
+       âœ… FORM DATA
     ========================= */
     const formData = {
       firstName: data.get('firstName')?.toString(),
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('❌ Error submitting volunteer application:', error);
+    console.error('âŒ Error submitting volunteer application:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
